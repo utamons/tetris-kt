@@ -99,7 +99,10 @@ class JFXApp : Application() {
 
 }
 
-
 fun main() {
     Application.launch(JFXApp::class.java)
+}
+
+fun getHelloString() : String {
+    return "Hello, tetris!"
 }
