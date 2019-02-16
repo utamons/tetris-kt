@@ -1,5 +1,4 @@
-- Implement build with Maven
-- Move project to Github
+- ???
 - ...
 - Profit!
 
