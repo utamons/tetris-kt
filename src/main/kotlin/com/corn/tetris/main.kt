@@ -14,6 +14,7 @@ import javafx.util.Duration
 import javafx.scene.text.FontWeight
 import javafx.scene.text.Text
 import javafx.scene.text.TextBoundsType
+import javafx.scene.transform.Rotate
 
 
 class TetrisApp : Application() {
@@ -24,6 +25,12 @@ class TetrisApp : Application() {
         val rect = TShape()
         rect.layoutX = 200.0
         rect.layoutY = 200.0
+
+        val rotate = Rotate()
+        rotate.angle = 90.0;
+        rotate.pivotX = 78.0
+        rotate.pivotY = 25.0
+        rect.transforms.add(rotate)
 
         val rectNext = TShape()
         rectNext.layoutX = 650.0

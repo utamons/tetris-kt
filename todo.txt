@@ -3,4 +3,7 @@
 ...
 - Profit!
 
+Improvements:
+
+- Animated rotation
 - Scale for different screens
