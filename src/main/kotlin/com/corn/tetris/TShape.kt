@@ -4,21 +4,23 @@ import javafx.scene.Group
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
-class TShape() : Group() {
+class TShape : Group() {
+
+    private val color = Color.DARKGREEN
+    private val rSize = 50.0;
+    private val gap = 3.0;
 
     init {
-        val r1 = Rectangle(30.0,30.0)
-        val r3 = Rectangle(30.0,30.0)
-        val r2 = Rectangle(30.0,30.0)
-        r1.fill = Color.RED
-        r3.fill = Color.RED
-        r2.fill = Color.BLUE
-        r1.x = 0.0
-        r1.y = 0.0
-        r2.x = 33.0
-        r2.y = 0.0
-        r3.x = 66.0
-        r3.y = 0.0
-        children.add(r1)
+        rect(0.0, 0.0)
+        rect(rSize + gap, 0.0)
+        rect((rSize + gap) * 2, 0.0)
+    }
+
+    private fun rect(x: Double, y: Double) {
+        val rect = Rectangle(rSize, rSize)
+        rect.fill = color
+        rect.x = x
+        rect.y = y
+        children.add(rect)
     }
 }
