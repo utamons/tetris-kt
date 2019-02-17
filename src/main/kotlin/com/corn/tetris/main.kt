@@ -29,10 +29,28 @@ class TetrisApp : Application() {
         rectNext.layoutX = 650.0
         rectNext.layoutY = 100.0
 
+        val banner = Text()
+        banner.isCache = true
+        banner.x = 150.0
+        banner.y = 60.0
+        banner.boundsType = TextBoundsType.LOGICAL_VERTICAL_CENTER
+        banner.fill = Color.web("0x3b596d")
+        banner.text = "Level 1, score 350"
+        banner.font = Font.font(null, FontWeight.BOLD, 40.0)
+
+        val record = Text()
+        record.isCache = true
+        record.x = 650.0
+        record.y = 300.0
+        record.boundsType = TextBoundsType.LOGICAL_VERTICAL_CENTER
+        record.fill = Color.web("0x3b596d")
+        record.text = "Record: 350"
+        record.font = Font.font(null, FontWeight.BOLD, 30.0)
+
         val container = TContainer()
 
         val root = Group()
-        root.children.addAll(container, rect, rectNext)
+        root.children.addAll(container, rect, rectNext, banner, record)
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()

@@ -1,11 +1,4 @@
-- Interface mock-up
-    - Container
-    - Next shape
-    - A shape in a glass
-    - Level banner
-    - Score
-    - Records
-    - "Game Over, press 'Space' to restart"
+- ???
 ...
 - Profit!
 
