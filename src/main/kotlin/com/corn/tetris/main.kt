@@ -7,10 +7,7 @@ import javafx.scene.Group
 import javafx.scene.Scene
 import javafx.scene.effect.DropShadow
 import javafx.scene.paint.Color
-import javafx.scene.shape.Circle
-import javafx.scene.shape.LineTo
-import javafx.scene.shape.MoveTo
-import javafx.scene.shape.Path
+import javafx.scene.shape.*
 import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.util.Duration
@@ -19,14 +16,18 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextBoundsType
 
 
-class JFXApp : Application() {
+class TetrisApp : Application() {
 
     override fun start(primaryStage: Stage) {
-        primaryStage.title = "Animation Test"
+        primaryStage.title = "KTetris"
 
         val circle1 = circle(Color.BROWN)
         val circle3 = circle(Color.GREEN)
         val circle2 = circle(Color.GOLD)
+        val rect = TShape()
+        val container = TContainer()
+        val r1 = Rectangle(30.0,30.0)
+        r1.fill = Color.RED
 
         val dropShadow = DropShadow()
         dropShadow.radius = 15.0
@@ -53,17 +54,17 @@ class JFXApp : Application() {
         val path2 = path(70.0)
         val path3 = path(140.0)
 
-        pathTransition(circle1, path1)
-        pathTransition(circle2, path2)
-        pathTransition(circle3, path3)
+        //pathTransition(r1, path1)
+       /* pathTransition(circle2, path2)
+        pathTransition(circle3, path3)*/
 
         val root = Group()
-        root.children.add(text)
-        root.children.add(circle1)
-        root.children.add(circle2)
-        root.children.add(circle3)
+       // root.children.add(text)
+        root.children.add(container)
+       /* root.children.add(circle2)
+        root.children.add(circle3)*/
 
-        primaryStage.scene = Scene(root, 480.0, 480.0)
+        primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
     }
 
@@ -77,7 +78,7 @@ class JFXApp : Application() {
         return path1
     }
 
-    private fun pathTransition(circle1: Circle, path1: Path) {
+    private fun pathTransition(circle1: Shape, path1: Path) {
         val ptr = PathTransition()
         ptr.duration = Duration.millis(6000.0)
         ptr.node = circle1
@@ -100,7 +101,7 @@ class JFXApp : Application() {
 }
 
 fun main() {
-    Application.launch(JFXApp::class.java)
+    Application.launch(TetrisApp::class.java)
 }
 
 fun getHelloString() : String {

@@ -1,3 +1,3 @@
-# Kotlin Tetris
+# Kotlin Simple Tetris
 
 Under construction...
