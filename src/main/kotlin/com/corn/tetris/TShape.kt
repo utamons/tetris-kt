@@ -18,6 +18,8 @@ class TShape : Group() {
 
     private fun rect(x: Double, y: Double) {
         val rect = Rectangle(rSize, rSize)
+        rect.arcHeight = 20.0
+        rect.arcWidth = 20.0
         rect.fill = color
         rect.x = x
         rect.y = y

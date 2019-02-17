@@ -3,6 +3,7 @@ package com.corn.tetris
 import javafx.scene.Group
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
+import javafx.scene.shape.StrokeLineCap
 
 class TContainer : Group() {
 
@@ -24,6 +25,7 @@ class TContainer : Group() {
     private fun line(x1 : Double,y1 : Double ,x2 : Double, y2: Double) {
         val line =   Line(x1,y1,x2,y2)
         line.stroke = color
+        line.strokeLineCap = StrokeLineCap.ROUND
         line.strokeWidth = lWidth
         children.add(line)
     }
