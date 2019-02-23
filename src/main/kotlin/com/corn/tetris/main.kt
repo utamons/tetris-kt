@@ -76,10 +76,8 @@ class TetrisApp : Application() {
         record.text = "Record: 350"
         record.font = Font.font(null, FontWeight.BOLD, 30.0)
 
-        val container = tetris.container
-
         val root = Group()
-        root.children.addAll(container, rect, rectNext, banner, record)
+        root.children.addAll(tetris, rect, rectNext, banner, record)
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
