@@ -16,8 +16,8 @@ class TGrid(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint: Poin
 
         for (row in (0..rows)) {
             for (col in (0..cols)) {
-                val x = col * (cellSize + gap) - (if (col == 0) 0.0 else gap / 2)
-                val y = row * (cellSize + gap) - (if (row == 0) 0.0 else gap / 2)
+                val x = col * (cellSize + 2*gap)
+                val y = row * (cellSize + 2*gap)
 
                 val circle = Circle(x, y, dotRadius, color)
                 val c = Circle(x, y, 2.0, Color.BLANCHEDALMOND)

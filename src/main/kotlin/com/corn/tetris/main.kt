@@ -77,7 +77,7 @@ class TetrisApp : Application() {
         record.font = Font.font(null, FontWeight.BOLD, 30.0)
 
         val root = Group()
-        root.children.addAll(tetris, rectNext, banner, record)
+        root.children.addAll(tetris)
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
