@@ -1,19 +1,20 @@
 package com.corn.tetris
 
+import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
-class TRow(x: Double, y: Double, private val cellSize: Double, gap: Double) : Group() {
+class TRow(cols: Int, private val cellSize: Double, gap: Double, basePoint: Point2D) : Group() {
 
     private val color = Color.DARKGREEN
 
     init {
-        for (i in (0..9)) {
-            rect(i*(cellSize+gap),0.0)
+        for (i in (0..(cols-1))) {
+            rect(i*(cellSize+2*gap),gap)
         }
-        layoutX = x;
-        layoutY = y;
+        layoutX = basePoint.x;
+        layoutY = basePoint.y;
     }
 
     private fun rect(x: Double, y: Double) {

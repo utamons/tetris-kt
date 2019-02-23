@@ -4,8 +4,8 @@ import javafx.geometry.Point2D
 import javafx.scene.Group
 
 const val CELL_SIZE = 50.0
-const val GAP = 4.0
-const val COLS = 10
+const val GAP = 2.0
+const val COLS = 8
 const val ROWS = 17
 const val L_WIDTH = 10.0
 
@@ -15,9 +15,9 @@ class Tetris : Group() {
 
     init {
         children.add(container)
-        /*for (i in (0..17)) {
-            children.add(TRow(70.0+(GAP*2)+1, 100.0 + i*(CELL_SIZE + GAP), CELL_SIZE, GAP))
-        }*/
+        for (i in (0..16)) {
+            children.add(TRow(COLS, CELL_SIZE, GAP, Point2D(70.0+(L_WIDTH/2+2* GAP), 80.0 + (L_WIDTH / 2 + GAP) + i*(CELL_SIZE + 2*GAP))))
+        }
     }
 
 }

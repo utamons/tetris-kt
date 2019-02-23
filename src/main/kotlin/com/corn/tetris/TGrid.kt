@@ -20,6 +20,8 @@ class TGrid(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint: Poin
                 val y = row * (cellSize + 2*gap)
 
                 val circle = Circle(x, y, dotRadius, color)
+                circle.strokeWidth = 3.0
+                circle.stroke = color
                 val c = Circle(x, y, 2.0, Color.BLANCHEDALMOND)
                 children.add(circle)
                 children.add(c)
