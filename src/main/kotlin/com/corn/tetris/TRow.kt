@@ -8,9 +8,9 @@ import javafx.scene.shape.Rectangle
 class TRow(cols: Int, private val cellSize: Double, gap: Double, basePoint: Point2D) : Group() {
 
     init {
-        for (i in (0..(cols-1))) {
+        /*for (i in (0..(cols-1))) {
             rect(i*(cellSize+gap), gap/2)
-        }
+        }*/
         layoutX = basePoint.x
         layoutY = basePoint.y
     }
