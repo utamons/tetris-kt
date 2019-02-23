@@ -41,23 +41,6 @@ class TetrisApp : Application() {
     override fun start(primaryStage: Stage) {
         primaryStage.title = "KTetris"
 
-        val rect = TShape()
-        rect.layoutX = 200.0
-        rect.layoutY = 200.0
-
-        val rotate = Rotate()
-        rotate.angle = 90.0;
-        rotate.pivotX = 78.0
-        rotate.pivotY = 25.0
-
-        print(rect)
-        rect.transforms.add(rotate)
-     //   print(rect)
-
-        val rectNext = TShape()
-        rectNext.layoutX = 650.0
-        rectNext.layoutY = 100.0
-
         val banner = Text()
         banner.isCache = true
         banner.x = 150.0
@@ -81,7 +64,6 @@ class TetrisApp : Application() {
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
-        print(rect)
     }
 }
 
