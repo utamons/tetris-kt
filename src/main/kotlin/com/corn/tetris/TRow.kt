@@ -11,10 +11,10 @@ class TRow(cols: Int, private val cellSize: Double, gap: Double, basePoint: Poin
 
     init {
         for (i in (0..(cols-1))) {
-            rect(i*(cellSize+2*gap),gap)
+            rect(i*(cellSize+gap), gap/2)
         }
-        layoutX = basePoint.x;
-        layoutY = basePoint.y;
+        layoutX = basePoint.x
+        layoutY = basePoint.y
     }
 
     private fun rect(x: Double, y: Double) {

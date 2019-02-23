@@ -7,8 +7,8 @@ import javafx.scene.shape.Rectangle
 class TShape : Group() {
 
     private val color = Color.DARKGREEN
-    private val rSize = 50.0;
-    private val gap = 3.0;
+    private val rSize = 50.0
+    private val gap = 3.0
 
     init {
         rect(0.0, 0.0)
@@ -26,7 +26,4 @@ class TShape : Group() {
         children.add(rect)
     }
 
-    public fun size() : Int {
-        return children.size;
-    }
 }
