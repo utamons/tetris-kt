@@ -25,4 +25,8 @@ class TShape : Group() {
         rect.y = y
         children.add(rect)
     }
+
+    public fun size() : Int {
+        return children.size;
+    }
 }

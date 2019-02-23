@@ -3,6 +3,7 @@ package com.corn.tetris
 import javafx.animation.Animation.INDEFINITE
 import javafx.animation.PathTransition
 import javafx.application.Application
+import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.Scene
 import javafx.scene.effect.DropShadow
@@ -19,6 +20,24 @@ import javafx.scene.transform.Rotate
 
 class TetrisApp : Application() {
 
+    private val tetris = Tetris()
+
+    private fun toRect(sh: TShape, i: Int) : Rectangle{
+        return (sh.children[i] as Rectangle)
+    }
+
+    private fun print(sh: TShape) {
+        for (i in (0..2)) {
+            val rect = toRect(sh, i)
+            val point = Point2D(rect.x,rect.y)
+            val bs = rect.localToScene(point)
+
+            val x = bs.x
+            val y = bs.y
+            println("[$i], x=$x, y=$y");
+        }
+    }
+
     override fun start(primaryStage: Stage) {
         primaryStage.title = "KTetris"
 
@@ -30,7 +49,10 @@ class TetrisApp : Application() {
         rotate.angle = 90.0;
         rotate.pivotX = 78.0
         rotate.pivotY = 25.0
+
+        print(rect)
         rect.transforms.add(rotate)
+     //   print(rect)
 
         val rectNext = TShape()
         rectNext.layoutX = 650.0
@@ -54,13 +76,14 @@ class TetrisApp : Application() {
         record.text = "Record: 350"
         record.font = Font.font(null, FontWeight.BOLD, 30.0)
 
-        val container = TContainer()
+        val container = tetris.container
 
         val root = Group()
         root.children.addAll(container, rect, rectNext, banner, record)
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
+        print(rect)
     }
 }
 
