@@ -1,11 +1,12 @@
 package com.corn.tetris
 
+import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.StrokeLineCap
 
-class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double) : Group() {
+class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint: Point2D) : Group() {
 
     private val x1 = 0.0
     private val y1 = 0.0
@@ -18,12 +19,12 @@ class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double) : Group() 
         line(x1, y1, x1, y1 + height)
         line(x1, y1 + height, x1 + width, y1 + height)
         line(x1 + width, y1, x1 + width, y1 + height)
-        layoutX = 70.0
-        layoutY = 100.0
+        layoutX = basePoint.x
+        layoutY = basePoint.y
     }
 
     private fun initSize(cells: Int, gap: Double, cellSize: Double): Double {
-        return (cells * (cellSize + gap) + gap).toDouble()
+        return (cells * (cellSize + gap) + gap)
     }
 
 

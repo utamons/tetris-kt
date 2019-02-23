@@ -1,4 +1,10 @@
 package com.corn.tetris
 
-class TGrid {
+import javafx.scene.Group
+
+class TGrid(cols: Int, rows: Int, gap: Double, cellSize: Double) : Group() {
+
+    init {
+
+    }
 }
