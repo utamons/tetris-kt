@@ -3,6 +3,7 @@ package com.corn.tetris
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
+import javafx.scene.shape.Circle
 import javafx.scene.shape.Line
 import javafx.scene.shape.StrokeLineCap
 
@@ -14,17 +15,21 @@ class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint:
     private val height = initSize(rows, gap, cellSize)
     private val color = Color.BROWN
     private val lWidth = 10.0
+    private val tGrid = TGrid(cols, rows, gap, cellSize, Point2D(0.0, 0.0))
 
     init {
         line(x1, y1, x1, y1 + height)
         line(x1, y1 + height, x1 + width, y1 + height)
         line(x1 + width, y1, x1 + width, y1 + height)
+        val c = Circle(x1, y1, 2.0, Color.BLANCHEDALMOND)
         layoutX = basePoint.x
         layoutY = basePoint.y
+        children.add(c)
+        children.add(tGrid)
     }
 
     private fun initSize(cells: Int, gap: Double, cellSize: Double): Double {
-        return (cells * (cellSize + gap) + gap)
+        return (cells * (cellSize + gap)) - (lWidth + gap) / 2.0
     }
 
 
