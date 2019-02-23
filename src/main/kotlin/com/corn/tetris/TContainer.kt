@@ -11,11 +11,12 @@ class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint:
 
     private val x1 = 0.0
     private val y1 = 0.0
-    private val width = initSize(cols, gap, cellSize)
-    private val height = initSize(rows, gap, cellSize)
-    private val color = Color.BROWN
     private val lWidth = 10.0
-    private val tGrid = TGrid(cols, rows, gap, cellSize, Point2D(0.0, 0.0))
+    private val width = initSize(cols, gap, cellSize) + gap * 4
+    private val height = initSize(rows, gap, cellSize) + (lWidth + gap) / 2.0
+    private val color = Color.BROWN
+
+    private val tGrid = TGrid(cols, rows, gap, cellSize, Point2D((lWidth / 2 + gap), 0.0))
 
     init {
         line(x1, y1, x1, y1 + height)
@@ -29,7 +30,7 @@ class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint:
     }
 
     private fun initSize(cells: Int, gap: Double, cellSize: Double): Double {
-        return (cells * (cellSize + gap)) - (lWidth + gap) / 2.0
+        return (cells * (cellSize + gap))
     }
 
 

@@ -8,7 +8,7 @@ import javafx.scene.shape.Circle
 class TGrid(cols: Int, rows: Int, gap: Double, cellSize: Double, basePoint: Point2D) : Group() {
 
     private val color = Color.BLUE
-    private val dotRadius = 4.0
+    private val dotRadius = gap
 
     init {
         layoutX = basePoint.x
