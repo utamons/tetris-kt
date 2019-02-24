@@ -1,5 +1,6 @@
 package com.corn.tetris
 
+import com.corn.tetris.shape.TShape
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
