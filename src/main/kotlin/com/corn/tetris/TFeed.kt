@@ -1,5 +1,6 @@
 package com.corn.tetris
 
+import com.corn.tetris.shape.TCube
 import com.corn.tetris.shape.TLine
 import com.corn.tetris.shape.TShape
 import javafx.geometry.Point2D
@@ -11,6 +12,7 @@ class TFeed(basePoint: Point2D) {
 
     init {
         shapes.add(TLine(CELL_SIZE, GAP, Point2D(basePoint.x, basePoint.y)))
+        shapes.add(TCube(CELL_SIZE, GAP, Point2D(basePoint.x, basePoint.y)))
     }
 
     fun nextShape() : TShape {

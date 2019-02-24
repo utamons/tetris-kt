@@ -1,10 +1,7 @@
 package com.corn.tetris
 
-import com.corn.tetris.shape.TLine
-import com.corn.tetris.shape.TShape
 import javafx.geometry.Point2D
 import javafx.scene.Group
-import javafx.scene.transform.Rotate
 
 const val CELL_SIZE = 45.0
 const val GAP = 4.0
@@ -28,6 +25,7 @@ class Tetris(basePoint: Point2D) : Group() {
         }
 
         val shape = feed.nextShape()
+        shape.layoutX = basePoint.x+ (container.boundsInLocal.width - shape.boundsInLocal.width)/2 - L_WIDTH/2
         children.addAll(shape)
 
        /* val rotate = Rotate()
