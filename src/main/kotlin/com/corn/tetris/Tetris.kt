@@ -10,17 +10,23 @@ const val COLS = 8
 const val ROWS = 17
 const val L_WIDTH = 10.0
 
-class Tetris : Group() {
+class Tetris(basePoint: Point2D) : Group() {
 
-    private val container: TContainer = TContainer(COLS, ROWS, GAP, CELL_SIZE, L_WIDTH, Point2D(70.0, 80.0))
+    private val container: TContainer = TContainer(COLS, ROWS, GAP, CELL_SIZE, L_WIDTH, basePoint)
 
     init {
         children.add(container)
-        for (i in (0..16)) {
-            children.add(TRow(COLS, CELL_SIZE, GAP, Point2D(70.0 + (L_WIDTH / 2 + GAP), 80.0 + (L_WIDTH / 2 + GAP / 2) + i * (CELL_SIZE + GAP))))
+
+        val xShift = L_WIDTH / 2 + GAP
+        val yShift = L_WIDTH / 2 + GAP / 2
+        val absX = basePoint.x + xShift
+        val absY = basePoint.y + yShift
+
+        for (i in (0 until ROWS)) {
+            children.add(TRow(COLS, CELL_SIZE, GAP, Point2D(absX, absY + i * (CELL_SIZE + GAP))))
         }
 
-        val shape = TShape(CELL_SIZE, GAP, Point2D(70.0 + (L_WIDTH / 2 + GAP), 80.0 + (L_WIDTH / 2 + GAP / 2)))
+        val shape = TShape(CELL_SIZE, GAP, Point2D(absX, absY))
         children.addAll(shape)
 
         val rotate = Rotate()
