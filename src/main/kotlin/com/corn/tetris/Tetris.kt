@@ -25,15 +25,15 @@ class Tetris(basePoint: Point2D) : Group() {
         }
 
         val shape = feed.nextShape()
-        shape.layoutX = basePoint.x+ (container.boundsInLocal.width - shape.boundsInLocal.width)/2 - L_WIDTH/2
+        shape.layoutX = startPoint.x + (COLS / 2 - shape.hCells() / 2) * (CELL_SIZE + GAP)
         children.addAll(shape)
 
-       /* val rotate = Rotate()
-        rotate.angle = 90.0
-        rotate.pivotX = shape.pivot().x
-        rotate.pivotY = shape.pivot().y
+        /* val rotate = Rotate()
+         rotate.angle = 90.0
+         rotate.pivotX = shape.pivot().x
+         rotate.pivotY = shape.pivot().y
 
-        shape.transforms.add(rotate)*/
+         shape.transforms.add(rotate)*/
 
         for (child in children) {
             if (child is TRow) {
@@ -42,12 +42,12 @@ class Tetris(basePoint: Point2D) : Group() {
         }
     }
 
-    private fun startPoint(basePoint:Point2D) : Point2D {
+    private fun startPoint(basePoint: Point2D): Point2D {
         val xShift = L_WIDTH / 2 + GAP
         val yShift = L_WIDTH / 2 + GAP / 2
         val absX = basePoint.x + xShift
         val absY = basePoint.y + yShift
-        return Point2D(absX,absY)
+        return Point2D(absX, absY)
     }
 
 }

@@ -17,6 +17,6 @@ class TFeed(basePoint: Point2D) {
 
     fun nextShape() : TShape {
         val idx = Random.nextInt(shapes.size)
-        return shapes.get(idx)
+        return shapes[idx]
     }
 }

@@ -5,7 +5,7 @@ import javafx.scene.Group
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
-open class TShape(private val cellSize: Double, private val gap: Double, basePoint: Point2D) : Group() {
+abstract class TShape(private val cellSize: Double, private val gap: Double, basePoint: Point2D) : Group() {
 
     private val color = Color.DARKGREEN
 
@@ -30,4 +30,5 @@ open class TShape(private val cellSize: Double, private val gap: Double, basePoi
         return Point2D(x,y)
     }
 
+    public abstract fun hCells() : Int
 }
