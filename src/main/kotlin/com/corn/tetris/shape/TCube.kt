@@ -3,6 +3,9 @@ package com.corn.tetris.shape
 import javafx.geometry.Point2D
 
 class TCube(private val cellSize: Double, private val gap: Double, basePoint: Point2D) : TShape(cellSize, gap, basePoint) {
+    override fun vCells(): Int {
+        return 2;
+    }
 
     override fun hCells(): Int {
         return 2;

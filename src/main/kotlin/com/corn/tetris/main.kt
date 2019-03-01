@@ -24,10 +24,14 @@ class TetrisApp : Application() {
         primaryStage.title = "KTetris"
 
         val root = Group()
-        root.children.addAll(Tetris(Point2D(70.0, 80.0)))
+        val tetris = Tetris(Point2D(70.0, 80.0))
+        tetris.play()
+        root.children.addAll(tetris)
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
+
+
     }
 }
 

@@ -1,5 +1,6 @@
 package com.corn.tetris
 
+import com.corn.tetris.shape.TShape
 import javafx.geometry.Point2D
 import javafx.scene.Group
 
@@ -11,9 +12,9 @@ const val L_WIDTH = 10.0
 
 class Tetris(basePoint: Point2D) : Group() {
 
-
     private val container: TContainer = TContainer(COLS, ROWS, GAP, CELL_SIZE, L_WIDTH, basePoint)
     private val feed = TFeed(startPoint(basePoint))
+    private var currentShape: TShape;
 
     init {
         children.add(container)
@@ -24,9 +25,9 @@ class Tetris(basePoint: Point2D) : Group() {
             children.add(TRow(COLS, CELL_SIZE, GAP, Point2D(startPoint.x, startPoint.y + i * (CELL_SIZE + GAP))))
         }
 
-        val shape = feed.nextShape()
-        shape.layoutX = startPoint.x + (COLS / 2 - shape.hCells() / 2) * (CELL_SIZE + GAP)
-        children.addAll(shape)
+        currentShape = feed.nextShape()
+        currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_SIZE + GAP)
+        children.addAll(currentShape)
 
         /* val rotate = Rotate()
          rotate.angle = 90.0
@@ -37,9 +38,13 @@ class Tetris(basePoint: Point2D) : Group() {
 
         for (child in children) {
             if (child is TRow) {
-                println(child.canFit(shape))
+                println(child.canFit(currentShape))
             }
         }
+    }
+
+    fun play() {
+        currentShape.move()
     }
 
     private fun startPoint(basePoint: Point2D): Point2D {
@@ -49,5 +54,4 @@ class Tetris(basePoint: Point2D) : Group() {
         val absY = basePoint.y + yShift
         return Point2D(absX, absY)
     }
-
 }
