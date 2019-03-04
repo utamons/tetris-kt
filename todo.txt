@@ -1,4 +1,8 @@
-- ???
+All for moving down:
+
+- Guessing next movement for TShape (getting bounds).
+- Fixing shape in row.
+- Working canFit().
 ...
 - Profit!
 

@@ -8,15 +8,14 @@ import kotlin.random.Random
 
 class TFeed(basePoint: Point2D) {
 
-    val shapes = ArrayList<TShape>()
+    val pt= basePoint
 
-    init {
-        shapes.add(TLine(5, CELL_SIZE, GAP, Point2D(basePoint.x, basePoint.y)))
-        shapes.add(TCube(CELL_SIZE, GAP, Point2D(basePoint.x, basePoint.y)))
-    }
 
     fun nextShape() : TShape {
-        val idx = Random.nextInt(shapes.size)
-        return shapes[idx]
+        val idx = Random.nextInt(2)
+        if (idx == 0)
+            return TLine(5, CELL_SIZE, GAP, Point2D(pt.x, pt.y))
+        else
+            return TCube(CELL_SIZE, GAP, Point2D(pt.x, pt.y))
     }
 }

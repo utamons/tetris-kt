@@ -1,21 +1,21 @@
 package com.corn.tetris.shape
 
-import com.corn.tetris.GAP
 import com.corn.tetris.L_WIDTH
-import com.corn.tetris.ROWS
-import javafx.animation.Animation.INDEFINITE
 import javafx.animation.PathTransition
-import javafx.event.EventHandler
+import javafx.geometry.BoundingBox
+import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
-import javafx.scene.shape.*
+import javafx.scene.shape.LineTo
+import javafx.scene.shape.MoveTo
+import javafx.scene.shape.Path
+import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 
-abstract class TShape(private val cellSize: Double, private val gap: Double, basePoint: Point2D) : Group() {
+abstract class TShape(private val cellSize: Double, private val gap: Double, private val basePoint: Point2D) : Group() {
 
     private val color = Color.DARKGREEN
-   // private val path = pathDown(basePoint);
 
     init {
         layoutX = basePoint.x
@@ -33,6 +33,17 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, bas
         children.add(rect)
     }
 
+    protected fun probeRect(x: Double, y: Double, shape: TShape) {
+        val rect = Rectangle(cellSize, cellSize)
+        rect.arcHeight = 20.0
+        rect.arcWidth = 20.0
+        rect.fill = Color.TRANSPARENT
+       // rect.stroke = Color.INDIGO
+        rect.x = x
+        rect.y = y
+        shape.children.add(rect)
+    }
+
     fun pivot() : Point2D {
         val x = boundsInLocal.width/2.0
         val y = gap / 2 + boundsInLocal.height/2.0
@@ -41,10 +52,20 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, bas
 
     abstract fun hCells() : Int
     abstract fun vCells() : Int
+    abstract fun probeTo(basepoint: Point2D): TShape
+
+    fun shapeDown(count:Int) : TShape {
+        val x = layoutX
+        val y = layoutY + (cellSize + gap) * (count+1)
+
+
+        val shapeDown = probeTo(Point2D(x,y))
+        return shapeDown
+    }
 
     private fun pathDown(count: Int): Path {
         val path = Path()
-        println(hCells())
+
         val startPt = Point2D((cellSize + gap)/2 * hCells() - gap/2, (cellSize + gap)/2 * vCells() - gap/2 )
         val x = startPt.x
         val y = startPt.y + (cellSize + gap) * (count-1)  + gap/2
@@ -58,21 +79,16 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, bas
         return path
     }
 
-    fun move() {
-        var count = 1;
+    fun moveDown(count: Int) : PathTransition{
         val ptr = PathTransition()
         ptr.duration = Duration.millis(500.0)
         ptr.node = this
         ptr.path = pathDown(count)
         ptr.cycleCount = 1
         //ptr.isAutoReverse = true
-        ptr.onFinished = EventHandler {
-            if (count < ROWS-vCells()) {
-                count++
-                ptr.path = pathDown(count)
-                ptr.play()
-            }
-        }
         ptr.play()
+        return ptr
     }
+
+
 }
