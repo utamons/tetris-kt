@@ -7,9 +7,16 @@
 - Removing complete rows
 - Score
 - Levels
+- Tests
+- Comments
+- Readme.rd
+
+- Code cleanup according to Kotlin guidelines
+
 - Scale for different screen resolutions
 - Effects
 - Sounds
+- Updated tests
 ...
 - Profit!
 
