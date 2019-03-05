@@ -23,7 +23,7 @@ class Tetris(basePoint: Point2D) : Group() {
     init {
         children.add(container)
 
-        for (i in (0 until ROWS)) {
+        (0 until ROWS).forEach { i ->
             children.add(TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G))))
         }
 
@@ -37,30 +37,16 @@ class Tetris(basePoint: Point2D) : Group() {
          rotate.pivotY = shape.pivot().y
 
          shape.transforms.add(rotate)*/
-
-        /* for (child in children) {
-             if (child is TRow) {
-                 println(child.canFit(currentShape))
-             }
-         }*/
     }
 
     private fun canFit(count: Int): Boolean {
-        var result = true
         val sd = currentShape.shapeDown(count)
-        for (child in children) {
-            if (child is TRow) {
-                result = result && child.canFit(sd)
-            }
-        }
-        return result
+        return children.none { it is TRow && !it.canFit(sd) }
     }
 
     private fun fix() {
-        for (child in children) {
-            if (child is TRow) {
-                child.fix(currentShape)
-            }
+        children.filtered { it is TRow }.forEach { child ->
+            (child as TRow).fix(currentShape)
         }
     }
 
@@ -75,7 +61,7 @@ class Tetris(basePoint: Point2D) : Group() {
                 count = 1
                 currentShape = feed.nextShape()
                 currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
-                if (canFit(count-1)) {
+                if (canFit(count - 1)) {
                     children.add(currentShape)
                     play()
                 }

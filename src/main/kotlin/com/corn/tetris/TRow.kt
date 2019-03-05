@@ -1,6 +1,7 @@
 package com.corn.tetris
 
 import com.corn.tetris.shape.TShape
+import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.Node
@@ -9,12 +10,12 @@ import javafx.scene.shape.Rectangle
 
 class TRow(basePoint: Point2D) : Group() {
 
-    private val empty = ArrayList<Node>()
-    private val fill = ArrayList<Node>()
+    private val empty = ArrayList<Rectangle>()
+    private val fill = ArrayList<Rectangle>()
 
     init {
-        for (i in (0..(COLS-1))) {
-            rect(i*(CELL_SIZE+ GAP), GAP/2)
+        (0 until COLS).forEach { i ->
+            rect(i * CELL_G, GAP / 2)
         }
         layoutX = basePoint.x
         layoutY = basePoint.y
@@ -32,28 +33,26 @@ class TRow(basePoint: Point2D) : Group() {
     }
 
     fun canFit(shape: TShape): Boolean {
-        for (child in fill) {
-            for (sChild in shape.children) {
-                if (child.intersects(sceneToLocal(sChild.localToScene(sChild.boundsInLocal)))) {
-                    return false
-                }
-            }
+        return fill.none { child ->
+            shape.children.any { child.intersects(cellBounds(it)) }
         }
-        return true
+    }
+
+    private fun cellBounds(cell: Node): Bounds {
+        return sceneToLocal(cell.localToScene(cell.boundsInLocal))
     }
 
     fun fix(shape: TShape) {
         val toRemove = ArrayList<Node>()
         val toMove = ArrayList<Node>()
-        for (sChild in shape.children) {
-            for (cell in empty) {
-                if (cell.intersects(sceneToLocal(sChild.localToScene(sChild.boundsInLocal)))) {
-                    toRemove.add(sChild)
-                    (cell as Rectangle).fill = Color.VIOLET
-                    toMove.add(cell)
-                    fill.add(cell)
-                }
-            }
+        shape.children.forEach { sChild ->
+            empty.filter { it.intersects(cellBounds(sChild)) }
+                    .forEach {
+                        toRemove.add(sChild)
+                        toMove.add(it)
+                        fill.add(it)
+                        it.fill = Color.VIOLET
+                    }
         }
         empty.removeAll(toMove)
         shape.children.removeAll(toRemove)

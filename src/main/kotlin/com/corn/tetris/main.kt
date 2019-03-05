@@ -18,7 +18,6 @@ class TetrisApp : Application() {
 
         primaryStage.scene = Scene(root, 900.0, 1100.0)
         primaryStage.show()
-
     }
 }
 

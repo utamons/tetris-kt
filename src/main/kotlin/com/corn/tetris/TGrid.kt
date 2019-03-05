@@ -14,8 +14,8 @@ class TGrid(basePoint: Point2D) : Group() {
         layoutX = basePoint.x
         layoutY = basePoint.y
 
-        for (row in (0..ROWS)) {
-            for (col in (0..COLS)) {
+        (0..ROWS).forEach { row ->
+            (0..COLS).forEach { col ->
                 val x = col * (CELL_G)
                 val y = row * (CELL_G)
 
@@ -24,6 +24,5 @@ class TGrid(basePoint: Point2D) : Group() {
                 children.add(circle)
             }
         }
-
     }
 }
