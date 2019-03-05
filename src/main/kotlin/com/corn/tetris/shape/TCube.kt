@@ -1,18 +1,20 @@
 package com.corn.tetris.shape
 
+import com.corn.tetris.CELL_SIZE
+import com.corn.tetris.GAP
 import javafx.geometry.Point2D
 
-class TCube(private val cellSize: Double, private val gap: Double, basePoint: Point2D) : TShape(cellSize, gap, basePoint) {
+class TCube(basePoint: Point2D) : TShape(basePoint) {
 
     override fun probeTo(basepoint: Point2D): TShape {
-        val shape = TCube(cellSize, gap, basepoint)
+        val shape = TCube(basepoint)
         shape.children.clear()
-        val yShift = gap / 2
+        val yShift = GAP / 2
         for (i in (0..1)) {
-            probeRect(i * (cellSize + gap), yShift, shape)
+            probeRect(i * (CELL_SIZE + GAP), yShift, shape)
         }
         for (i in (0..1)) {
-            probeRect(i * (cellSize + gap), yShift + cellSize + gap, shape)
+            probeRect(i * (CELL_SIZE + GAP), yShift + CELL_SIZE + GAP, shape)
         }
         return shape
     }
@@ -26,12 +28,12 @@ class TCube(private val cellSize: Double, private val gap: Double, basePoint: Po
     }
 
     init {
-        val yShift = gap / 2
+        val yShift = GAP / 2
         for (i in (0..1)) {
-            rect(i * (cellSize + gap), yShift)
+            rect(i * (CELL_SIZE + GAP), yShift)
         }
         for (i in (0..1)) {
-            rect(i * (cellSize + gap), yShift + cellSize + gap)
+            rect(i * (CELL_SIZE + GAP), yShift + CELL_SIZE + GAP)
         }
     }
 }

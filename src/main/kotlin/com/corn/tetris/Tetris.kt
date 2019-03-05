@@ -5,15 +5,15 @@ import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
 
-const val CELL_SIZE = 45.0
-const val GAP = 4.0
-const val COLS = 9
-const val ROWS = 19
-const val L_WIDTH = 10.0
+public const val CELL_SIZE = 45.0
+public const val GAP = 4.0
+public const val COLS = 9
+public const val ROWS = 19
+public const val L_WIDTH = 10.0
 
 class Tetris(basePoint: Point2D) : Group() {
 
-    private val container: TContainer = TContainer(COLS, ROWS, GAP, CELL_SIZE, L_WIDTH, basePoint)
+    private val container: TContainer = TContainer(basePoint)
     private val feed = TFeed(startPoint(basePoint))
     private var currentShape: TShape;
     private val startPoint = startPoint(basePoint)
@@ -23,7 +23,7 @@ class Tetris(basePoint: Point2D) : Group() {
         children.add(container)
 
         for (i in (0 until ROWS)) {
-            children.add(TRow(COLS, CELL_SIZE, GAP, Point2D(startPoint.x, startPoint.y + i * (CELL_SIZE + GAP))))
+            children.add(TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_SIZE + GAP))))
         }
 
         currentShape = feed.nextShape()

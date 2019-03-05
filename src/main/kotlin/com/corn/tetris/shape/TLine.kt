@@ -1,15 +1,19 @@
 package com.corn.tetris.shape
 
+import com.corn.tetris.CELL_SIZE
+import com.corn.tetris.GAP
 import javafx.geometry.Point2D
 
-class TLine(private val cells : Int, private val cellSize: Double, private val gap: Double, basePoint: Point2D) : TShape(cellSize, gap, basePoint) {
+class TLine(basePoint: Point2D) : TShape(basePoint) {
+    
+    private val cells = 5;
 
     override fun probeTo(basepoint: Point2D): TShape {
-        val shape = TLine(cells,cellSize,gap,basepoint)
+        val shape = TLine(basepoint)
         shape.children.clear()
-        val yShift = gap / 2
+        val yShift = GAP / 2
         for (i in 0 until cells) {
-            probeRect(i*(cellSize + gap), yShift,shape)
+            probeRect(i*(CELL_SIZE + GAP), yShift,shape)
         }
         return shape
     }
@@ -23,9 +27,9 @@ class TLine(private val cells : Int, private val cellSize: Double, private val g
     }
 
     init {
-        val yShift = gap / 2
+        val yShift = GAP / 2
         for (i in 0 until cells) {
-            rect(i*(cellSize + gap), yShift)
+            rect(i*(CELL_SIZE + GAP), yShift)
         }
     }
 }

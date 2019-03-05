@@ -1,5 +1,7 @@
 package com.corn.tetris.shape
 
+import com.corn.tetris.CELL_SIZE
+import com.corn.tetris.GAP
 import com.corn.tetris.L_WIDTH
 import javafx.animation.PathTransition
 import javafx.geometry.BoundingBox
@@ -13,7 +15,7 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 
-abstract class TShape(private val cellSize: Double, private val gap: Double, private val basePoint: Point2D) : Group() {
+abstract class TShape(private val basePoint: Point2D) : Group() {
 
     private val color = Color.DARKGREEN
 
@@ -23,7 +25,7 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, pri
     }
 
     protected fun rect(x: Double, y: Double) {
-        val rect = Rectangle(cellSize, cellSize)
+        val rect = Rectangle(CELL_SIZE, CELL_SIZE)
         rect.arcHeight = 20.0
         rect.arcWidth = 20.0
         rect.fill = color
@@ -34,7 +36,7 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, pri
     }
 
     protected fun probeRect(x: Double, y: Double, shape: TShape) {
-        val rect = Rectangle(cellSize, cellSize)
+        val rect = Rectangle(CELL_SIZE, CELL_SIZE)
         rect.arcHeight = 20.0
         rect.arcWidth = 20.0
         rect.fill = Color.TRANSPARENT
@@ -46,7 +48,7 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, pri
 
     fun pivot() : Point2D {
         val x = boundsInLocal.width/2.0
-        val y = gap / 2 + boundsInLocal.height/2.0
+        val y = GAP / 2 + boundsInLocal.height/2.0
         return Point2D(x,y)
     }
 
@@ -56,7 +58,7 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, pri
 
     fun shapeDown(count:Int) : TShape {
         val x = layoutX
-        val y = layoutY + (cellSize + gap) * (count+1)
+        val y = layoutY + (CELL_SIZE + GAP) * (count+1)
 
 
         val shapeDown = probeTo(Point2D(x,y))
@@ -66,12 +68,12 @@ abstract class TShape(private val cellSize: Double, private val gap: Double, pri
     private fun pathDown(count: Int): Path {
         val path = Path()
 
-        val startPt = Point2D((cellSize + gap)/2 * hCells() - gap/2, (cellSize + gap)/2 * vCells() - gap/2 )
+        val startPt = Point2D((CELL_SIZE + GAP)/2 * hCells() - GAP/2, (CELL_SIZE + GAP)/2 * vCells() - GAP/2 )
         val x = startPt.x
-        val y = startPt.y + (cellSize + gap) * (count-1)  + gap/2
+        val y = startPt.y + (CELL_SIZE + GAP) * (count-1)  + GAP/2
 
         val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x, y + cellSize + gap + gap/2)
+        val linetTo = LineTo(x, y + CELL_SIZE + GAP + GAP/2)
 
         path.elements.add(moveTo)
         path.elements.add(linetTo)

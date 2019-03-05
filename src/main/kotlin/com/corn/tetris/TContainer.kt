@@ -6,15 +6,15 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.StrokeLineCap
 
-class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, private val lWidth: Double, basePoint: Point2D) : Group() {
+class TContainer(basePoint: Point2D) : Group() {
 
     private val x1 = 0.0
     private val y1 = 0.0
-    private val width = initSize(cols, gap, cellSize)
-    private val height = initSize(rows, gap, cellSize)
+    private val width = initSize(COLS)
+    private val height = initSize(ROWS)
     private val color = Color.BROWN
 
-    private val tGrid = TGrid(cols, rows, gap, cellSize, Point2D((lWidth / 2 + gap / 2), (lWidth / 2 + gap / 2)))
+    private val tGrid = TGrid(Point2D((L_WIDTH / 2 + GAP / 2), (L_WIDTH / 2 + GAP / 2)))
 
     init {
         line(x1, y1, x1, y1 + height)
@@ -25,8 +25,8 @@ class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, private va
         children.add(tGrid)
     }
 
-    private fun initSize(cells: Int, gap: Double, cellSize: Double): Double {
-        return (cells * (cellSize + gap)) + lWidth + gap
+    private fun initSize(cells: Int) : Double {
+        return (cells * (CELL_SIZE + GAP)) + L_WIDTH + GAP
     }
 
 
@@ -34,7 +34,7 @@ class TContainer(cols: Int, rows: Int, gap: Double, cellSize: Double, private va
         val line = Line(x1, y1, x2, y2)
         line.stroke = color
         line.strokeLineCap = StrokeLineCap.ROUND
-        line.strokeWidth = lWidth
+        line.strokeWidth = L_WIDTH
         children.add(line)
     }
 }

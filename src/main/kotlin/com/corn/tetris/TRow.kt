@@ -9,25 +9,25 @@ import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
-class TRow(cols: Int, private val cellSize: Double, private val gap: Double, private val basePoint: Point2D) : Group() {
+class TRow(private val basePoint: Point2D) : Group() {
 
     val empty = ArrayList<Node>()
     val fill = ArrayList<Node>()
 
     init {
-        for (i in (0..(cols-1))) {
-            rect(i*(cellSize+gap), gap/2)
+        for (i in (0..(COLS-1))) {
+            rect(i*(CELL_SIZE+ GAP), GAP/2)
         }
         layoutX = basePoint.x
         layoutY = basePoint.y
     }
 
     fun bounds() : Bounds{
-        return BoundingBox(basePoint.x,basePoint.y,(cellSize+gap)*COLS,cellSize+gap)
+        return BoundingBox(basePoint.x,basePoint.y,(CELL_SIZE+ GAP)*COLS, CELL_SIZE+ GAP)
     }
 
     private fun rect(x: Double, y: Double) {
-        val rect = Rectangle(cellSize, cellSize)
+        val rect = Rectangle(CELL_SIZE, CELL_SIZE)
         rect.arcHeight = 20.0
         rect.arcWidth = 20.0
         rect.fill = Color.TRANSPARENT
