@@ -1,12 +1,15 @@
-All for moving down:
-
-- Guessing next movement for TShape (getting bounds).
-- Fixing shape in row.
-- Working canFit().
+- Code cleanup
+- Shapes generation and initial setup
+- Show next shape
+- Movement down till the end
+- Sliding left-right with keys
+- Rotation
+- Removing complete rows
+- Score
+- Levels
+- Scale for different screen resolutions
+- Effects
+- Sounds
 ...
 - Profit!
 
-Improvements:
-
-- Animated rotation
-- Scale for different screens
