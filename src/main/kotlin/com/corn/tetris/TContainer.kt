@@ -26,7 +26,7 @@ class TContainer(basePoint: Point2D) : Group() {
     }
 
     private fun initSize(cells: Int) : Double {
-        return (cells * (CELL_SIZE + GAP)) + L_WIDTH + GAP
+        return (cells * (CELL_G)) + L_WIDTH + GAP
     }
 
 

@@ -10,6 +10,7 @@ const val GAP = 4.0
 const val COLS = 9
 const val ROWS = 19
 const val L_WIDTH = 10.0
+const val CELL_G = CELL_SIZE + GAP
 
 class Tetris(basePoint: Point2D) : Group() {
 
@@ -23,11 +24,11 @@ class Tetris(basePoint: Point2D) : Group() {
         children.add(container)
 
         for (i in (0 until ROWS)) {
-            children.add(TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_SIZE + GAP))))
+            children.add(TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G))))
         }
 
         currentShape = feed.nextShape()
-        currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_SIZE + GAP)
+        currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
         children.addAll(currentShape)
 
         /* val rotate = Rotate()
@@ -73,7 +74,7 @@ class Tetris(basePoint: Point2D) : Group() {
                 fix()
                 count = 1
                 currentShape = feed.nextShape()
-                currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_SIZE + GAP)
+                currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
                 if (canFit(count-1)) {
                     children.add(currentShape)
                     play()

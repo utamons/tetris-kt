@@ -16,8 +16,8 @@ class TGrid(basePoint: Point2D) : Group() {
 
         for (row in (0..ROWS)) {
             for (col in (0..COLS)) {
-                val x = col * (CELL_SIZE + GAP)
-                val y = row * (CELL_SIZE + GAP)
+                val x = col * (CELL_G)
+                val y = row * (CELL_G)
 
                 val circle = Circle(x, y, dotRadius, Color.BLANCHEDALMOND)
                 circle.stroke = color

@@ -1,5 +1,6 @@
 package com.corn.tetris.shape
 
+import com.corn.tetris.CELL_G
 import com.corn.tetris.CELL_SIZE
 import com.corn.tetris.GAP
 import javafx.animation.PathTransition
@@ -55,7 +56,7 @@ abstract class TShape(basePoint: Point2D) : Group() {
 
     fun shapeDown(count:Int) : TShape {
         val x = layoutX
-        val y = layoutY + (CELL_SIZE + GAP) * (count+1)
+        val y = layoutY + (CELL_G) * (count+1)
 
 
         return probeTo(Point2D(x,y))
@@ -64,12 +65,12 @@ abstract class TShape(basePoint: Point2D) : Group() {
     private fun pathDown(count: Int): Path {
         val path = Path()
 
-        val startPt = Point2D((CELL_SIZE + GAP)/2 * hCells() - GAP/2, (CELL_SIZE + GAP)/2 * vCells() - GAP/2 )
+        val startPt = Point2D((CELL_G)/2 * hCells() - GAP/2, (CELL_G)/2 * vCells() - GAP/2 )
         val x = startPt.x
-        val y = startPt.y + (CELL_SIZE + GAP) * (count-1)  + GAP/2
+        val y = startPt.y + (CELL_G) * (count-1)  + GAP/2
 
         val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x, y + CELL_SIZE + GAP + GAP/2)
+        val linetTo = LineTo(x, y + CELL_G + GAP/2)
 
         path.elements.add(moveTo)
         path.elements.add(linetTo)
