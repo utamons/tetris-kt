@@ -17,6 +17,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private val container: TContainer = TContainer(basePoint)
     private val feed = TFeed(startPoint(basePoint))
     private var currentShape: TShape
+    private var nextShape: TShape
     private val startPoint = startPoint(basePoint)
     private var count = 1
 
@@ -27,9 +28,12 @@ class Tetris(basePoint: Point2D) : Group() {
             children.add(TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G))))
         }
 
-        currentShape = feed.nextShape()
+        currentShape = feed.currentShape()
+        nextShape = feed.nextShape()
         currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
+        nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH*2 + 50
         children.add(currentShape)
+        children.add(nextShape)
 
         /* val rotate = Rotate()
          rotate.angle = 90.0
@@ -59,12 +63,17 @@ class Tetris(basePoint: Point2D) : Group() {
             } else {
                 fix()
                 count = 1
-                currentShape = feed.nextShape()
+                currentShape = feed.currentShape()
+                children.remove(nextShape)
+
                 currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
                 currentShape.layoutY -= CELL_G * (currentShape.vCells() - 1)
                 children.add(currentShape)
                 if (canFit(count - 1)) {
                     play()
+                    nextShape = feed.nextShape();
+                    children.add(nextShape)
+                    nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH*2 + 50
                 }  else {
                     fix()
                 }
