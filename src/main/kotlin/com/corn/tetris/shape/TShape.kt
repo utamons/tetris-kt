@@ -2,10 +2,7 @@ package com.corn.tetris.shape
 
 import com.corn.tetris.CELL_SIZE
 import com.corn.tetris.GAP
-import com.corn.tetris.L_WIDTH
 import javafx.animation.PathTransition
-import javafx.geometry.BoundingBox
-import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
@@ -15,7 +12,7 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 
-abstract class TShape(private val basePoint: Point2D) : Group() {
+abstract class TShape(basePoint: Point2D) : Group() {
 
     private val color = Color.DARKGREEN
 
@@ -46,11 +43,11 @@ abstract class TShape(private val basePoint: Point2D) : Group() {
         shape.children.add(rect)
     }
 
-    fun pivot() : Point2D {
+    /*fun pivot() : Point2D {
         val x = boundsInLocal.width/2.0
         val y = GAP / 2 + boundsInLocal.height/2.0
         return Point2D(x,y)
-    }
+    }*/
 
     abstract fun hCells() : Int
     abstract fun vCells() : Int
@@ -61,8 +58,7 @@ abstract class TShape(private val basePoint: Point2D) : Group() {
         val y = layoutY + (CELL_SIZE + GAP) * (count+1)
 
 
-        val shapeDown = probeTo(Point2D(x,y))
-        return shapeDown
+        return probeTo(Point2D(x,y))
     }
 
     private fun pathDown(count: Int): Path {

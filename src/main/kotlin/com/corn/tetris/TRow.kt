@@ -1,18 +1,16 @@
 package com.corn.tetris
 
 import com.corn.tetris.shape.TShape
-import javafx.geometry.BoundingBox
-import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
-class TRow(private val basePoint: Point2D) : Group() {
+class TRow(basePoint: Point2D) : Group() {
 
-    val empty = ArrayList<Node>()
-    val fill = ArrayList<Node>()
+    private val empty = ArrayList<Node>()
+    private val fill = ArrayList<Node>()
 
     init {
         for (i in (0..(COLS-1))) {
@@ -20,10 +18,6 @@ class TRow(private val basePoint: Point2D) : Group() {
         }
         layoutX = basePoint.x
         layoutY = basePoint.y
-    }
-
-    fun bounds() : Bounds{
-        return BoundingBox(basePoint.x,basePoint.y,(CELL_SIZE+ GAP)*COLS, CELL_SIZE+ GAP)
     }
 
     private fun rect(x: Double, y: Double) {
@@ -54,7 +48,7 @@ class TRow(private val basePoint: Point2D) : Group() {
         for (sChild in shape.children) {
             for (cell in empty) {
                 if (cell.intersects(sceneToLocal(sChild.localToScene(sChild.boundsInLocal)))) {
-                    toRemove.add(sChild);
+                    toRemove.add(sChild)
                     (cell as Rectangle).fill = Color.VIOLET
                     toMove.add(cell)
                     fill.add(cell)

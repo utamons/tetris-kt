@@ -6,7 +6,7 @@ import javafx.geometry.Point2D
 
 class TLine(basePoint: Point2D) : TShape(basePoint) {
     
-    private val cells = 5;
+    private val cells = 5
 
     override fun probeTo(basepoint: Point2D): TShape {
         val shape = TLine(basepoint)
@@ -23,7 +23,7 @@ class TLine(basePoint: Point2D) : TShape(basePoint) {
     }
 
     override fun hCells(): Int {
-        return cells;
+        return cells
     }
 
     init {

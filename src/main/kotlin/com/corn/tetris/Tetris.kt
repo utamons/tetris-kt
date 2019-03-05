@@ -5,19 +5,19 @@ import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
 
-public const val CELL_SIZE = 45.0
-public const val GAP = 4.0
-public const val COLS = 9
-public const val ROWS = 19
-public const val L_WIDTH = 10.0
+const val CELL_SIZE = 45.0
+const val GAP = 4.0
+const val COLS = 9
+const val ROWS = 19
+const val L_WIDTH = 10.0
 
 class Tetris(basePoint: Point2D) : Group() {
 
     private val container: TContainer = TContainer(basePoint)
     private val feed = TFeed(startPoint(basePoint))
-    private var currentShape: TShape;
+    private var currentShape: TShape
     private val startPoint = startPoint(basePoint)
-    private var count = 1;
+    private var count = 1
 
     init {
         children.add(container)
@@ -45,26 +45,26 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun canFit(count: Int): Boolean {
-        var result = true;
+        var result = true
         val sd = currentShape.shapeDown(count)
         for (child in children) {
             if (child is TRow) {
                 result = result && child.canFit(sd)
             }
         }
-        return result;
+        return result
     }
 
     private fun fix() {
         for (child in children) {
             if (child is TRow) {
-                child.fix(currentShape);
+                child.fix(currentShape)
             }
         }
     }
 
     fun play() {
-        val ptr = currentShape.moveDown(count);
+        val ptr = currentShape.moveDown(count)
         ptr.onFinished = EventHandler {
             if (count < ROWS - currentShape.vCells() && canFit(count)) {
                 count++

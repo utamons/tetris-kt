@@ -8,14 +8,13 @@ import kotlin.random.Random
 
 class TFeed(basePoint: Point2D) {
 
-    val pt= basePoint
-
+    private val pt= basePoint
 
     fun nextShape() : TShape {
         val idx = Random.nextInt(2)
-        if (idx == 0)
-            return TLine(Point2D(pt.x, pt.y))
+        return if (idx == 0)
+            TLine(Point2D(pt.x, pt.y))
         else
-            return TCube(Point2D(pt.x, pt.y))
+            TCube(Point2D(pt.x, pt.y))
     }
 }

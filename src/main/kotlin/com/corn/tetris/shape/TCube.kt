@@ -20,11 +20,11 @@ class TCube(basePoint: Point2D) : TShape(basePoint) {
     }
 
     override fun vCells(): Int {
-        return 2;
+        return 2
     }
 
     override fun hCells(): Int {
-        return 2;
+        return 2
     }
 
     init {
