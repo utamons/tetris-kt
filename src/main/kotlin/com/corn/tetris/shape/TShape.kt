@@ -76,7 +76,7 @@ abstract class TShape(basePoint: Point2D) : Group() {
 
     fun moveDown(count: Int): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(500.0)
+        ptr.duration = Duration.millis(50.0)
         ptr.node = this
         ptr.path = pathDown(count)
         ptr.cycleCount = 1
