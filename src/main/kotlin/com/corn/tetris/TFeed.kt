@@ -25,6 +25,7 @@ class TFeed(basePoint: Point2D) {
             0 -> TLine(Point2D(pt.x, pt.y))
             1 -> TCube(Point2D(pt.x, pt.y))
             2 -> TLform(Point2D(pt.x, pt.y))
+            3 -> TTform(Point2D(pt.x, pt.y))
             else -> TCform(Point2D(pt.x, pt.y))
         }
     }
