@@ -1,9 +1,6 @@
 package com.corn.tetris
 
-import com.corn.tetris.shape.TCube
-import com.corn.tetris.shape.TLine
-import com.corn.tetris.shape.TSform
-import com.corn.tetris.shape.TShape
+import com.corn.tetris.shape.*
 import javafx.geometry.Point2D
 import kotlin.random.Random
 
@@ -23,11 +20,12 @@ class TFeed(basePoint: Point2D) {
     }
 
     private fun getShape(): TShape {
-        val idx = Random.nextInt(3)
+        val idx = Random.nextInt(4)
         return when (idx) {
             0 -> TLine(Point2D(pt.x, pt.y))
             1 -> TCube(Point2D(pt.x, pt.y))
-            else -> TSform(Point2D(pt.x, pt.y))
+            2 -> TLform(Point2D(pt.x, pt.y))
+            else -> TCform(Point2D(pt.x, pt.y))
         }
     }
 }
