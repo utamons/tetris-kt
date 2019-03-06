@@ -1,5 +1,3 @@
-- Show next shape
-- Movement down till the end
 - Sliding left-right with keys
 - Rotation
 - Removing complete rows
