@@ -1,7 +1,10 @@
 package com.corn.tetris
 
+import com.corn.tetris.shape.TShape
+import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
+import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.StrokeLineCap
@@ -25,10 +28,19 @@ class TContainer(basePoint: Point2D) : Group() {
         children.add(tGrid)
     }
 
-    private fun initSize(cells: Int) : Double {
-        return (cells * (CELL_G)) + L_WIDTH + GAP
+    private fun initSize(cells: Int): Double {
+        return (cells * CELL_G) + L_WIDTH + GAP
     }
 
+    fun canFit(shape: TShape): Boolean {
+        return children.none { child ->
+            shape.children.any { child is Line && child.intersects(cellBounds(it)) }
+        }
+    }
+
+    private fun cellBounds(cell: Node): Bounds {
+        return sceneToLocal(cell.localToScene(cell.boundsInLocal))
+    }
 
     private fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
         val line = Line(x1, y1, x2, y2)

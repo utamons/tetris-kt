@@ -83,4 +83,20 @@ abstract class TShape(basePoint: Point2D) : Group() {
         ptr.play()
         return ptr
     }
+
+    fun shapeLeft(count: Int): TShape {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun moveLeft(count: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun shapeRight(count: Int): TShape {
+        TODO("not implemented")
+    }
+
+    fun moveRight(count: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

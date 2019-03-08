@@ -4,6 +4,8 @@ import com.corn.tetris.shape.TShape
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 
 const val CELL_SIZE = 45.0
 const val GAP = 4.0
@@ -35,6 +37,10 @@ class Tetris(basePoint: Point2D) : Group() {
         children.add(currentShape)
         children.add(nextShape)
 
+        onKeyPressed = EventHandler { event ->
+            processKey(event)
+        }
+
         /* val rotate = Rotate()
          rotate.angle = 90.0
          rotate.pivotX = shape.pivot().x
@@ -43,9 +49,15 @@ class Tetris(basePoint: Point2D) : Group() {
          shape.transforms.add(rotate)*/
     }
 
-    private fun canFit(count: Int): Boolean {
-        val sd = currentShape.shapeDown(count)
-        return children.none { it is TRow && !it.canFit(sd) }
+    private fun processKey(event: KeyEvent) {
+        when {
+            (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft(count))) -> currentShape.moveLeft(count)
+            (event.code == KeyCode.RIGHT && canFit(currentShape.shapeRight(count))) -> currentShape.moveRight(count)
+        }
+    }
+
+    private fun canFit(probe: TShape): Boolean {
+        return children.none { (it is TRow && !it.canFit(probe)) || (it is TContainer && !it.canFit(probe)) }
     }
 
     private fun fix() {
@@ -57,7 +69,7 @@ class Tetris(basePoint: Point2D) : Group() {
     fun play() {
         val ptr = currentShape.moveDown(count)
         ptr.onFinished = EventHandler {
-            if (count < ROWS - currentShape.vCells() && canFit(count)) {
+            if (canFit(currentShape.shapeDown(count))) {
                 count++
                 play()
             } else {
@@ -66,10 +78,10 @@ class Tetris(basePoint: Point2D) : Group() {
                 currentShape = feed.currentShape()
                 children.remove(nextShape)
 
-                currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
+                currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * CELL_G
                 currentShape.layoutY -= CELL_G * (currentShape.vCells() - 1)
                 children.add(currentShape)
-                if (canFit(count - 1)) {
+                if (canFit(currentShape.shapeDown(count-1))) {
                     play()
                     nextShape = feed.nextShape();
                     children.add(nextShape)
