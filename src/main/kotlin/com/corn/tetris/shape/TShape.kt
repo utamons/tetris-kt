@@ -50,23 +50,22 @@ abstract class TShape(basePoint: Point2D) : Group() {
     abstract fun vCells(): Int
     abstract fun probeTo(basepoint: Point2D): TShape
 
-    fun shapeDown(count: Int): TShape {
-        val x = layoutX
-        val y = layoutY + (CELL_G) * (count + 1)
-
+    fun shapeDown(countV: Int, countH: Int): TShape {
+        val x = layoutX + CELL_G * (countH - 1)
+        val y = layoutY + (CELL_G) * (countV + 1)
 
         return probeTo(Point2D(x, y))
     }
 
-    private fun pathDown(count: Int): Path {
+    private fun pathDown(count: Int, countH: Int): Path {
         val path = Path()
 
         val startPt = Point2D((CELL_G) / 2 * hCells() - GAP / 2, (CELL_G) / 2 * vCells() - GAP / 2)
-        val x = startPt.x
+        val x = startPt.x + (CELL_G) * (countH - 1)
         val y = startPt.y + (CELL_G) * (count - 1) + GAP / 2
 
         val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x, y + CELL_G + GAP / 2)
+        val linetTo = LineTo(x, y + CELL_G)
 
         path.elements.add(moveTo)
         path.elements.add(linetTo)
@@ -74,29 +73,80 @@ abstract class TShape(basePoint: Point2D) : Group() {
         return path
     }
 
-    fun moveDown(count: Int): PathTransition {
+    private fun pathRight(countV: Int, countH: Int): Path {
+        val path = Path()
+
+        val startPt = Point2D((CELL_G) / 2 * hCells() - GAP / 2, (CELL_G) / 2 * vCells() - GAP / 2)
+        val x = startPt.x + (CELL_G) * (countH - 1)
+        val y = startPt.y + (CELL_G) * (countV - 1) + GAP / 2
+
+        val moveTo = MoveTo(x, y)
+        val linetTo = LineTo(x + CELL_G, y)
+
+        path.elements.add(moveTo)
+        path.elements.add(linetTo)
+
+        return path
+    }
+
+    private fun pathLeft(countV: Int, countH: Int): Path {
+        val path = Path()
+
+        val startPt = Point2D((CELL_G) / 2 * hCells() - GAP / 2, (CELL_G) / 2 * vCells() - GAP / 2)
+        val x = startPt.x + (CELL_G) * (countH - 1)
+        val y = startPt.y + (CELL_G) * (countV - 1) + GAP / 2
+
+        val moveTo = MoveTo(x, y)
+        val linetTo = LineTo(x - CELL_G, y)
+
+        path.elements.add(moveTo)
+        path.elements.add(linetTo)
+
+        return path
+    }
+
+
+    fun moveDown(countV: Int, countH: Int): PathTransition {
         val ptr = PathTransition()
         ptr.duration = Duration.millis(500.0)
         ptr.node = this
-        ptr.path = pathDown(count)
+        ptr.path = pathDown(countV, countH)
         ptr.cycleCount = 1
         ptr.play()
         return ptr
     }
 
-    fun shapeLeft(count: Int): TShape {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun shapeLeft(countV: Int, countH: Int): TShape {
+        val x = layoutX + CELL_G * (countH - 2)
+        val y = layoutY + CELL_G * countV
+
+        return probeTo(Point2D(x, y))
     }
 
-    fun moveLeft(count: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun moveLeft(countV: Int, countH: Int): PathTransition {
+        val ptr = PathTransition()
+        ptr.duration = Duration.millis(10.0)
+        ptr.node = this
+        ptr.path = pathLeft(countV, countH)
+        ptr.cycleCount = 1
+        ptr.play()
+        return ptr
     }
 
-    fun shapeRight(count: Int): TShape {
-        TODO("not implemented")
+    fun shapeRight(countV: Int, countH: Int): TShape {
+        val x = layoutX + CELL_G * countH
+        val y = layoutY + CELL_G * countV
+
+        return probeTo(Point2D(x, y))
     }
 
-    fun moveRight(count: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun moveRight(countV: Int, countH: Int): PathTransition {
+        val ptr = PathTransition()
+        ptr.duration = Duration.millis(10.0)
+        ptr.node = this
+        ptr.path = pathRight(countV, countH)
+        ptr.cycleCount = 1
+        ptr.play()
+        return ptr
     }
 }

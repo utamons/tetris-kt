@@ -1,11 +1,13 @@
 package com.corn.tetris
 
 import com.corn.tetris.shape.TShape
+import javafx.animation.PathTransition
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import javafx.util.Duration
 
 const val CELL_SIZE = 45.0
 const val GAP = 4.0
@@ -21,7 +23,9 @@ class Tetris(basePoint: Point2D) : Group() {
     private var currentShape: TShape
     private var nextShape: TShape
     private val startPoint = startPoint(basePoint)
-    private var count = 1
+    private var countV = 1
+    private var countH = 1
+    private var trDown: PathTransition = PathTransition()
 
     init {
         children.add(container)
@@ -33,7 +37,7 @@ class Tetris(basePoint: Point2D) : Group() {
         currentShape = feed.currentShape()
         nextShape = feed.nextShape()
         currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G)
-        nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH*2 + 50
+        nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
         children.add(currentShape)
         children.add(nextShape)
 
@@ -51,8 +55,16 @@ class Tetris(basePoint: Point2D) : Group() {
 
     private fun processKey(event: KeyEvent) {
         when {
-            (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft(count))) -> currentShape.moveLeft(count)
-            (event.code == KeyCode.RIGHT && canFit(currentShape.shapeRight(count))) -> currentShape.moveRight(count)
+            (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft(countV, countH))) -> {
+                trDown.stop()
+                val pt = currentShape.moveLeft(countV, countH--)
+                pt.onFinished = EventHandler { play() }
+            }
+            (event.code == KeyCode.RIGHT && canFit(currentShape.shapeRight(countV, countH))) -> {
+                trDown.stop()
+                val pt = currentShape.moveRight(countV, countH++)
+                pt.onFinished = EventHandler { play() }
+            }
         }
     }
 
@@ -67,26 +79,27 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     fun play() {
-        val ptr = currentShape.moveDown(count)
-        ptr.onFinished = EventHandler {
-            if (canFit(currentShape.shapeDown(count))) {
-                count++
+        trDown = currentShape.moveDown(countV, countH)
+        trDown.onFinished = EventHandler {
+            if (canFit(currentShape.shapeDown(countV, countH))) {
+                countV++
                 play()
             } else {
                 fix()
-                count = 1
+                countV = 1
+                countH = 1
                 currentShape = feed.currentShape()
                 children.remove(nextShape)
 
                 currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * CELL_G
                 currentShape.layoutY -= CELL_G * (currentShape.vCells() - 1)
                 children.add(currentShape)
-                if (canFit(currentShape.shapeDown(count-1))) {
+                if (canFit(currentShape.shapeDown(countV - 1, countH))) {
                     play()
                     nextShape = feed.nextShape();
                     children.add(nextShape)
-                    nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH*2 + 50
-                }  else {
+                    nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
+                } else {
                     fix()
                 }
             }
