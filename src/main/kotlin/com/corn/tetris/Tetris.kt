@@ -75,7 +75,6 @@ class Tetris(basePoint: Point2D) : Group() {
                     fix()
                 }
             }
-
         }
     }
 

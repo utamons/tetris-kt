@@ -23,7 +23,7 @@ abstract class TShape : Group() {
         layoutX = 0.0
         layoutY = 0.0
         this.x = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
-        this.y = startPoint.y + (CELL_G) / 2 * vCells()
+        this.y = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G*vCells()
     }
 
     fun updatePoint() {
@@ -73,7 +73,7 @@ abstract class TShape : Group() {
 
     fun moveDown(): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(500.0)
+        ptr.duration = Duration.millis(50.0)
         ptr.node = this
         ptr.path = pathDown()
         ptr.cycleCount = 1
