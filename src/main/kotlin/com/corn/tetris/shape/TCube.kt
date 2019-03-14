@@ -4,12 +4,12 @@ import com.corn.tetris.CELL_G
 import com.corn.tetris.GAP
 import javafx.geometry.Point2D
 
-class TCube(basePoint: Point2D) : TShape(basePoint) {
+class TCube : TShape() {
 
     private val yShift = GAP / 2
 
     override fun probeTo(basepoint: Point2D): TShape {
-        val shape = TCube(basepoint)
+        val shape = TCube()
         shape.children.clear()
         (0..1).forEach { i ->
             probeRect(i * CELL_G, yShift, shape)

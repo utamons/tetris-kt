@@ -4,12 +4,12 @@ import com.corn.tetris.CELL_G
 import com.corn.tetris.GAP
 import javafx.geometry.Point2D
 
-class TLine(basePoint: Point2D) : TShape(basePoint) {
+class TLine : TShape() {
 
     private val cells = 5
 
     override fun probeTo(basepoint: Point2D): TShape {
-        val shape = TLine(basepoint)
+        val shape = TLine()
         shape.children.clear()
         val yShift = GAP / 2
         (0 until cells).forEach { i ->

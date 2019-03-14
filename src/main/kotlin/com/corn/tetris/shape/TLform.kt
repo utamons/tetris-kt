@@ -4,12 +4,12 @@ import com.corn.tetris.CELL_G
 import com.corn.tetris.GAP
 import javafx.geometry.Point2D
 
-class TLform(basePoint: Point2D) : TShape(basePoint) {
+class TLform : TShape() {
 
     private val yShift = GAP / 2
 
     override fun probeTo(basepoint: Point2D): TShape {
-        val shape = TLform(basepoint)
+        val shape = TLform()
         shape.children.clear()
         (0..2).forEach { i ->
             probeRect(i * CELL_G, yShift, shape)
