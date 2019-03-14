@@ -2,7 +2,8 @@ package com.corn.tetris.shape
 
 import com.corn.tetris.CELL_G
 import com.corn.tetris.CELL_SIZE
-import javafx.animation.Animation.INDEFINITE
+import com.corn.tetris.COLS
+import com.corn.tetris.GAP
 import javafx.animation.PathTransition
 import javafx.geometry.Point2D
 import javafx.scene.Group
@@ -13,7 +14,19 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 
-abstract class TShape() : Group() {
+abstract class TShape : Group() {
+
+    private var x: Double = 0.0
+    private var y: Double = 0.0
+
+    fun startPoint(startPoint: Point2D) {
+        this.x = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
+        this.y = startPoint.y + (CELL_G) / 2 * vCells()
+    }
+
+    fun updatePoint() {
+        y = (CELL_G) / 2 * vCells() + translateY
+    }
 
     private val color = Color.DARKGREEN
 
@@ -39,11 +52,12 @@ abstract class TShape() : Group() {
     abstract fun vCells(): Int
     abstract fun probeTo(basepoint: Point2D): TShape
 
-    fun shapeDown(x: Double, y: Double): TShape {
-        return probeTo(Point2D(x, y))
+    fun shapeDown(): TShape {
+        val pX = x - CELL_G * hCells() / 2 + GAP/2
+        return probeTo(Point2D(pX, y + GAP))
     }
 
-    private fun pathDown(x: Double, y: Double): Path {
+    private fun pathDown(): Path {
         val path = Path()
 
         val moveTo = MoveTo(x, y)
@@ -55,13 +69,12 @@ abstract class TShape() : Group() {
         return path
     }
 
-    fun moveDown(x: Double, y: Double): PathTransition {
+    fun moveDown(): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(500.0)
+        ptr.duration = Duration.millis(2500.0)
         ptr.node = this
-        ptr.path = pathDown(x, y)
-        ptr.cycleCount = INDEFINITE
-        ptr.isAutoReverse = true;
+        ptr.path = pathDown()
+        ptr.cycleCount = 1
         ptr.play()
         return ptr
     }

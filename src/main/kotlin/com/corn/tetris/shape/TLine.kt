@@ -10,6 +10,8 @@ class TLine : TShape() {
 
     override fun probeTo(basepoint: Point2D): TShape {
         val shape = TLine()
+        shape.layoutX = basepoint.x
+        shape.layoutY = basepoint.y
         shape.children.clear()
         val yShift = GAP / 2
         (0 until cells).forEach { i ->

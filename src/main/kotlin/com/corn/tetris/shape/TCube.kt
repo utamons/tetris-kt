@@ -10,6 +10,8 @@ class TCube : TShape() {
 
     override fun probeTo(basepoint: Point2D): TShape {
         val shape = TCube()
+        shape.layoutX = basepoint.x
+        shape.layoutY = basepoint.y
         shape.children.clear()
         (0..1).forEach { i ->
             probeRect(i * CELL_G, yShift, shape)

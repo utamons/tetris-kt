@@ -5,8 +5,6 @@ import javafx.animation.PathTransition
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyEvent
 
 const val CELL_SIZE = 45.0
 const val GAP = 4.0
@@ -22,12 +20,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private var currentShape: TShape
     private var nextShape: TShape
     private val startPoint = startPoint(basePoint)
-    private var countV = 1
-    private var countH = 1
     private var trDown: PathTransition = PathTransition()
-
-    private var x: Double;
-    private var y: Double;
 
     init {
         children.add(container)
@@ -37,13 +30,14 @@ class Tetris(basePoint: Point2D) : Group() {
         }
 
         currentShape = feed.currentShape()
+
+        currentShape.startPoint(startPoint)
+
         nextShape = feed.nextShape()
         nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
+        nextShape.layoutY = startPoint.y +  (CELL_G) / 2 * currentShape.vCells()
         children.add(currentShape)
         children.add(nextShape)
-
-        x = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * (CELL_G) + (CELL_G) / 2 * currentShape.hCells() - GAP / 2
-        y = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
     }
 
     private fun canFit(probe: TShape): Boolean {
@@ -57,32 +51,32 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     fun play() {
-        trDown = currentShape.moveDown(x, y)
+        trDown = currentShape.moveDown()
         trDown.onFinished = EventHandler {
-            y = (CELL_G) / 2 * currentShape.vCells() + currentShape.translateY
-           // if (canFit(currentShape.shapeDown(x, y))) {
+            // y = (CELL_G) / 2 * currentShape.vCells() + currentShape.translateY
+            if (canFit(currentShape.shapeDown())) {
+                children.add(currentShape.shapeDown())
+                currentShape.updatePoint()
                 play()
-            /*} else {
+            } else {
                 fix()
+                children.add(currentShape.shapeDown())
                 currentShape = feed.currentShape()
                 children.remove(nextShape)
 
-                currentShape.layoutX = startPoint.x + (COLS / 2 - currentShape.hCells() / 2) * CELL_G
-                currentShape.layoutY -= CELL_G * (currentShape.vCells() - 1)
-
-                x = (CELL_G) / 2 * currentShape.hCells() - GAP / 2
-                y = (CELL_G) / 2 * currentShape.vCells() - GAP / 2
+                currentShape.startPoint(startPoint)
 
                 children.add(currentShape)
-              // if (canFit(currentShape.shapeDown(x, y - CELL_G))) {
+                /* if (canFit(currentShape.shapeDown(x, y - CELL_G))) {
                     play()
                     nextShape = feed.nextShape();
                     children.add(nextShape)
                     nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
-               *//* } else {
+                } else {
                     fix()
-                }*//*
+                }
             }*/
+            }
         }
     }
 
