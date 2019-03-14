@@ -34,8 +34,8 @@ class Tetris(basePoint: Point2D) : Group() {
         currentShape.startPoint(startPoint)
 
         nextShape = feed.nextShape()
-        nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
-        nextShape.layoutY = startPoint.y +  (CELL_G) / 2 * currentShape.vCells()
+        nextShape.translateY = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
+        nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
         children.add(currentShape)
         children.add(nextShape)
     }
@@ -55,28 +55,27 @@ class Tetris(basePoint: Point2D) : Group() {
         trDown.onFinished = EventHandler {
             // y = (CELL_G) / 2 * currentShape.vCells() + currentShape.translateY
             if (canFit(currentShape.shapeDown())) {
-                children.add(currentShape.shapeDown())
                 currentShape.updatePoint()
                 play()
             } else {
                 fix()
-                children.add(currentShape.shapeDown())
                 currentShape = feed.currentShape()
-                children.remove(nextShape)
-
                 currentShape.startPoint(startPoint)
+                if (canFit(currentShape.shapeDown())) {
+                    children.remove(nextShape)
 
-                children.add(currentShape)
-                /* if (canFit(currentShape.shapeDown(x, y - CELL_G))) {
                     play()
-                    nextShape = feed.nextShape();
+
+                    children.add(currentShape)
+                    nextShape = feed.nextShape()
                     children.add(nextShape)
-                    nextShape.layoutX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
+                    nextShape.translateY = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
+                    nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
                 } else {
                     fix()
                 }
-            }*/
             }
+
         }
     }
 

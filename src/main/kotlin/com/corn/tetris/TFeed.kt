@@ -17,7 +17,7 @@ class TFeed {
         return nextShape
     }
 
-    /*private fun getShape(): TShape {
+    private fun getShape(): TShape {
         val idx = Random.nextInt(4)
         return when (idx) {
             0 -> TLine()
@@ -26,9 +26,6 @@ class TFeed {
             3 -> TTform()
             else -> TCform()
         }
-    }*/
-
-    private fun getShape(): TShape {
-        return TLine()
     }
+
 }

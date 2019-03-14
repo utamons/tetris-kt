@@ -8,8 +8,10 @@ class TTform : TShape() {
 
     private val yShift = GAP / 2
 
-    override fun probeTo(basePoint: Point2D): TShape {
+    override fun probeTo(basepoint: Point2D): TShape {
         val shape = TTform()
+        shape.layoutX = basepoint.x
+        shape.layoutY = basepoint.y
         shape.children.clear()
         (0..2).forEach { i ->
             probeRect(i * CELL_G, yShift, shape)

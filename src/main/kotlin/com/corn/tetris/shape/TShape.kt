@@ -20,6 +20,8 @@ abstract class TShape : Group() {
     private var y: Double = 0.0
 
     fun startPoint(startPoint: Point2D) {
+        layoutX = 0.0
+        layoutY = 0.0
         this.x = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
         this.y = startPoint.y + (CELL_G) / 2 * vCells()
     }
@@ -54,7 +56,7 @@ abstract class TShape : Group() {
 
     fun shapeDown(): TShape {
         val pX = x - CELL_G * hCells() / 2 + GAP/2
-        return probeTo(Point2D(pX, y + GAP))
+        return probeTo(Point2D(pX, y + CELL_G))
     }
 
     private fun pathDown(): Path {
@@ -71,7 +73,7 @@ abstract class TShape : Group() {
 
     fun moveDown(): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(2500.0)
+        ptr.duration = Duration.millis(500.0)
         ptr.node = this
         ptr.path = pathDown()
         ptr.cycleCount = 1
