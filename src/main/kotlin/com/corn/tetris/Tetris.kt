@@ -5,6 +5,8 @@ import javafx.animation.PathTransition
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 
 const val CELL_SIZE = 45.0
 const val GAP = 4.0
@@ -38,6 +40,33 @@ class Tetris(basePoint: Point2D) : Group() {
         nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
         children.add(currentShape)
         children.add(nextShape)
+
+        onKeyPressed = EventHandler { event ->
+            processKey(event)
+        }
+    }
+
+    private fun processKey(event: KeyEvent) {
+        when {
+            (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft())) -> {
+                trDown.stop()
+                currentShape.updatePoint()
+                val pt = currentShape.moveLeft()
+                pt.onFinished = EventHandler {
+                    currentShape.updatePoint()
+                    play()
+                }
+            }
+            (event.code == KeyCode.RIGHT && canFit(currentShape.shapeRight())) -> {
+                trDown.stop()
+                currentShape.updatePoint()
+                val pt = currentShape.moveRight()
+                pt.onFinished = EventHandler {
+                    currentShape.updatePoint()
+                    play()
+                }
+            }
+        }
     }
 
     private fun canFit(probe: TShape): Boolean {
@@ -53,7 +82,6 @@ class Tetris(basePoint: Point2D) : Group() {
     fun play() {
         trDown = currentShape.moveDown()
         trDown.onFinished = EventHandler {
-            // y = (CELL_G) / 2 * currentShape.vCells() + currentShape.translateY
             if (canFit(currentShape.shapeDown())) {
                 currentShape.updatePoint()
                 play()

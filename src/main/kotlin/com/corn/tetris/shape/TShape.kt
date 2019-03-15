@@ -23,11 +23,12 @@ abstract class TShape : Group() {
         layoutX = 0.0
         layoutY = 0.0
         this.x = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
-        this.y = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G*vCells()
+        this.y = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
     }
 
     fun updatePoint() {
         y = (CELL_G) / 2 * vCells() + translateY
+        x = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
     }
 
     private val color = Color.DARKGREEN
@@ -55,8 +56,18 @@ abstract class TShape : Group() {
     abstract fun probeTo(basepoint: Point2D): TShape
 
     fun shapeDown(): TShape {
-        val pX = x - CELL_G * hCells() / 2 + GAP/2
+        val pX = x - CELL_G * hCells() / 2 + GAP / 2
         return probeTo(Point2D(pX, y + CELL_G))
+    }
+
+    fun shapeRight(): TShape {
+        val pX = x - CELL_G * hCells() / 2 + GAP / 2
+        return probeTo(Point2D(pX + CELL_G, y))
+    }
+
+    fun shapeLeft(): TShape {
+        val pX = x - CELL_G * hCells() / 2 + GAP / 2
+        return probeTo(Point2D(pX - CELL_G, y))
     }
 
     private fun pathDown(): Path {
@@ -71,13 +82,59 @@ abstract class TShape : Group() {
         return path
     }
 
+    private fun pathRight(): Path {
+        val path = Path()
+
+        val moveTo = MoveTo(x, y)
+        val linetTo = LineTo(x + CELL_G, y)
+
+        path.elements.add(moveTo)
+        path.elements.add(linetTo)
+
+        return path
+    }
+
+    private fun pathLeft(): Path {
+        val path = Path()
+
+        val moveTo = MoveTo(x, y)
+        val linetTo = LineTo(x - CELL_G, y)
+
+        path.elements.add(moveTo)
+        path.elements.add(linetTo)
+
+        return path
+    }
+
     fun moveDown(): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(50.0)
+        ptr.duration = Duration.millis(1000.0)
         ptr.node = this
         ptr.path = pathDown()
         ptr.cycleCount = 1
         ptr.play()
         return ptr
     }
+
+
+    fun moveRight(): PathTransition {
+        val ptr = PathTransition()
+        ptr.duration = Duration.millis(100.0)
+        ptr.node = this
+        ptr.path = pathRight()
+        ptr.cycleCount = 1
+        ptr.play()
+        return ptr
+    }
+
+    fun moveLeft(): PathTransition {
+        val ptr = PathTransition()
+        ptr.duration = Duration.millis(100.0)
+        ptr.node = this
+        ptr.path = pathLeft()
+        ptr.cycleCount = 1
+        ptr.play()
+        return ptr
+    }
+
 }
