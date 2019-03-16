@@ -18,17 +18,23 @@ abstract class TShape : Group() {
 
     private var x: Double = 0.0
     private var y: Double = 0.0
+    private var nextY: Double = 0.0
 
     fun startPoint(startPoint: Point2D) {
         layoutX = 0.0
         layoutY = 0.0
         this.x = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
         this.y = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
+        nextY = y + CELL_G
     }
 
     fun updatePoint() {
         y = (CELL_G) / 2 * vCells() + translateY
         x = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
+    }
+
+    fun setNextY() {
+        nextY = y + CELL_G
     }
 
     private val color = Color.DARKGREEN
@@ -74,7 +80,7 @@ abstract class TShape : Group() {
         val path = Path()
 
         val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x, y + CELL_G)
+        val linetTo = LineTo(x, nextY)
 
         path.elements.add(moveTo)
         path.elements.add(linetTo)

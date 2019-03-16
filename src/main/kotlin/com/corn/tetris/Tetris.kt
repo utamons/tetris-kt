@@ -84,6 +84,7 @@ class Tetris(basePoint: Point2D) : Group() {
         trDown.onFinished = EventHandler {
             if (canFit(currentShape.shapeDown())) {
                 currentShape.updatePoint()
+                currentShape.setNextY()
                 play()
             } else {
                 fix()
