@@ -4,14 +4,17 @@ import com.corn.tetris.CELL_G
 import com.corn.tetris.CELL_SIZE
 import com.corn.tetris.COLS
 import com.corn.tetris.GAP
-import javafx.animation.PathTransition
-import javafx.animation.RotateTransition
+import javafx.animation.*
 import javafx.geometry.Point2D
+import javafx.geometry.Point3D
 import javafx.scene.Group
+import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.*
 import javafx.scene.transform.Rotate
 import javafx.util.Duration
+import javafx.scene.transform.Translate
+
 
 abstract class TShape : Group() {
 
@@ -63,14 +66,17 @@ abstract class TShape : Group() {
     abstract fun hCells(): Int
     abstract fun vCells(): Int
     abstract fun probeTo(basepoint: Point2D): TShape
+    abstract fun pivot(): Point2D
 
     fun shape(angle: Double): TShape {
         val pX = toLeftEdge()
         val probe = probeTo(Point2D(pX, centerY-vCells()* CELL_G/2 ))
         if (angle % 180 != 0.0) {
-            val pvX = probe.hCells() * CELL_G / 2 - GAP / 2
-            val pvY = probe.vCells() * CELL_G / 2
+            val pvX = pivot().x
+            val pvY = pivot().y
             val rotate = Rotate()
+            val circle = Circle(pvX, pvY, GAP, Color.BLACK)
+            probe.children.add(circle)
             rotate.angle = angle
             rotate.pivotX = pvX
             rotate.pivotY = pvY
@@ -118,16 +124,26 @@ abstract class TShape : Group() {
         }
     }
 
-    fun rotate(angle: Double): RotateTransition {
-        this.angle = angle
-        val rotateTransition = RotateTransition()
-        rotateTransition.duration = Duration.millis(100.0)
-        rotateTransition.node = this
-        rotateTransition.byAngle = angle
-        rotateTransition.cycleCount = 1
-        rotateTransition.isAutoReverse = false
-        rotateTransition.play()
-        return rotateTransition;
+
+    fun rotate(angle: Double): Timeline {
+        this.angle += angle
+        val rotationTransform = Rotate(0.0, pivot().x, pivot().y)
+        this.transforms.add(rotationTransform)
+        val rotationAnimation = Timeline()
+        rotationAnimation.keyFrames
+                .add(
+                        KeyFrame(
+                                Duration.millis(100.0),
+                                KeyValue(
+                                        rotationTransform.angleProperty(),
+                                        angle
+                                )
+                        )
+                )
+        rotationAnimation.cycleCount = 1
+        rotationAnimation.isAutoReverse = false
+        rotationAnimation.play()
+        return rotationAnimation;
     }
 
     fun moveDown(): PathTransition {
