@@ -43,9 +43,10 @@ class TRow(basePoint: Point2D) : Group() {
     }
 
     fun fix(shape: TShape) {
+        val probe = shape.shapeForFix()
         val toRemove = ArrayList<Node>()
         val toMove = ArrayList<Node>()
-        shape.children.forEach { sChild ->
+        probe.children.forEach { sChild ->
             empty.filter { it.intersects(cellBounds(sChild)) }
                     .forEach {
                         toRemove.add(sChild)
@@ -55,6 +56,6 @@ class TRow(basePoint: Point2D) : Group() {
                     }
         }
         empty.removeAll(toMove)
-        shape.children.removeAll(toRemove)
+        /*shape.children.removeAll(toRemove)*/
     }
 }

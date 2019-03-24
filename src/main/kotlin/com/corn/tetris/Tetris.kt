@@ -21,6 +21,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private val feed = TFeed()
     private var currentShape: TShape
     private var nextShape: TShape
+    private var testShape: TShape
     private val startPoint = startPoint(basePoint)
     private var trDown: PathTransition = PathTransition()
 
@@ -40,6 +41,8 @@ class Tetris(basePoint: Point2D) : Group() {
         nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
         children.add(currentShape)
         children.add(nextShape)
+        testShape = currentShape.shapeDown()
+        //children.add(testShape);
 
         onKeyPressed = EventHandler { event ->
             processKey(event)
@@ -48,6 +51,18 @@ class Tetris(basePoint: Point2D) : Group() {
 
     private fun processKey(event: KeyEvent) {
         when {
+            (event.code == KeyCode.UP && canFit(currentShape.shape(-90.0))) -> {
+                trDown.stop()
+                currentShape.updatePoint()
+                val pt = currentShape.rotate(-90.0)
+                pt.onFinished = EventHandler {
+                    currentShape.updatePoint()
+                    /*children.add(currentShape.shapeDown())
+                    children.add(currentShape.shapeLeft())
+                    children.add(currentShape.shapeRight())*/
+                    play()
+                }
+            }
             (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft())) -> {
                 trDown.stop()
                 currentShape.updatePoint()
@@ -76,16 +91,19 @@ class Tetris(basePoint: Point2D) : Group() {
     private fun fix() {
         children.filtered { it is TRow }.forEach { child ->
             (child as TRow).fix(currentShape)
+            children.remove(currentShape)
         }
     }
 
     fun play() {
         trDown = currentShape.moveDown()
         trDown.onFinished = EventHandler {
+            //children.remove(testShape)
+            testShape = currentShape.shapeDown()
+            //children.add(testShape)
             if (canFit(currentShape.shapeDown())) {
                 currentShape.updatePoint()
                 currentShape.setNextY()
-               // children.add(currentShape.shapeRotate())
                 play()
             } else {
                 fix()
