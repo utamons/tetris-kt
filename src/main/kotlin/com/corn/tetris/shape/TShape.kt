@@ -63,13 +63,8 @@ abstract class TShape : Group() {
     abstract fun vCells(): Int
     abstract fun probeTo(basepoint: Point2D): TShape
 
-    fun shapeDown(): TShape {
-        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
-        return probeTo(Point2D(pX, centerY + CELL_G))
-    }
-
     fun shapeRotate(): TShape {
-        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        val pX = toLeftEdge()
         val probe = probeTo(Point2D(pX, centerY-vCells()* CELL_G/2 ))
         val rotate = Rotate()
         val pvX = probe.hCells() * CELL_G/2 - GAP/2
@@ -84,13 +79,18 @@ abstract class TShape : Group() {
         return probe;
     }
 
+    fun shapeDown(): TShape {
+        val pX = toLeftEdge()
+        return probeTo(Point2D(pX, centerY + CELL_G))
+    }
+
     fun shapeRight(): TShape {
-        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        val pX = toLeftEdge()
         return probeTo(Point2D(pX + CELL_G, centerY))
     }
 
     fun shapeLeft(): TShape {
-        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        val pX = toLeftEdge()
         return probeTo(Point2D(pX - CELL_G, centerY))
     }
 
@@ -128,4 +128,5 @@ abstract class TShape : Group() {
         return path
     }
 
+    private fun toLeftEdge() = centerX - CELL_G * hCells() / 2 + GAP / 2
 }
