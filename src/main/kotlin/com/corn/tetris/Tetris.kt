@@ -85,6 +85,7 @@ class Tetris(basePoint: Point2D) : Group() {
             if (canFit(currentShape.shapeDown())) {
                 currentShape.updatePoint()
                 currentShape.setNextY()
+               // children.add(currentShape.shapeRotate())
                 play()
             } else {
                 fix()

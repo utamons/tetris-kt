@@ -18,7 +18,7 @@ class TFeed {
     }
 
     private fun getShape(): TShape {
-        val idx = Random.nextInt(4)
+        val idx = Random.nextInt(2)
         return when (idx) {
             0 -> TLine()
             1 -> TCube()

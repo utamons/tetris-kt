@@ -5,36 +5,38 @@ import com.corn.tetris.CELL_SIZE
 import com.corn.tetris.COLS
 import com.corn.tetris.GAP
 import javafx.animation.PathTransition
+import javafx.animation.RotateTransition
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
-import javafx.scene.shape.LineTo
-import javafx.scene.shape.MoveTo
-import javafx.scene.shape.Path
-import javafx.scene.shape.Rectangle
+import javafx.scene.shape.*
+import javafx.scene.transform.Rotate
 import javafx.util.Duration
 
 abstract class TShape : Group() {
 
-    private var x: Double = 0.0
-    private var y: Double = 0.0
+    private var centerX: Double = 0.0
+    private var centerY: Double = 0.0
     private var nextY: Double = 0.0
 
     fun startPoint(startPoint: Point2D) {
         layoutX = 0.0
         layoutY = 0.0
-        this.x = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
-        this.y = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
-        nextY = y + CELL_G
+        this.centerX = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
+        this.centerY = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
+        nextY = centerY + CELL_G
     }
 
-    fun updatePoint() {
-        y = (CELL_G) / 2 * vCells() + translateY
-        x = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
+    fun updatePoint(): Circle {
+        centerY = (CELL_G) / 2 * vCells() + translateY
+        centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
+        val circle = Circle(centerX, centerY, GAP, Color.VIOLET)
+        circle.stroke = Color.ALICEBLUE
+        return circle;
     }
 
     fun setNextY() {
-        nextY = y + CELL_G
+        nextY = centerY + CELL_G
     }
 
     private val color = Color.DARKGREEN
@@ -62,85 +64,68 @@ abstract class TShape : Group() {
     abstract fun probeTo(basepoint: Point2D): TShape
 
     fun shapeDown(): TShape {
-        val pX = x - CELL_G * hCells() / 2 + GAP / 2
-        return probeTo(Point2D(pX, y + CELL_G))
+        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        return probeTo(Point2D(pX, centerY + CELL_G))
+    }
+
+    fun shapeRotate(): TShape {
+        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        val probe = probeTo(Point2D(pX, centerY-vCells()* CELL_G/2 ))
+        val rotate = Rotate()
+        val pvX = probe.hCells() * CELL_G/2 - GAP/2
+        val pvY = probe.vCells()* CELL_G/2
+        val circle = Circle(pvX, pvY, GAP, Color.BLACK)
+        //circle.stroke = color
+        probe.children.add(circle)
+        /*rotate.angle = -90.0;
+        rotate.pivotX = pvX
+        rotate.pivotY = pvY
+        probe.transforms.add(rotate)*/
+        return probe;
     }
 
     fun shapeRight(): TShape {
-        val pX = x - CELL_G * hCells() / 2 + GAP / 2
-        return probeTo(Point2D(pX + CELL_G, y))
+        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        return probeTo(Point2D(pX + CELL_G, centerY))
     }
 
     fun shapeLeft(): TShape {
-        val pX = x - CELL_G * hCells() / 2 + GAP / 2
-        return probeTo(Point2D(pX - CELL_G, y))
-    }
-
-    private fun pathDown(): Path {
-        val path = Path()
-
-        val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x, nextY)
-
-        path.elements.add(moveTo)
-        path.elements.add(linetTo)
-
-        return path
-    }
-
-    private fun pathRight(): Path {
-        val path = Path()
-
-        val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x + CELL_G, y)
-
-        path.elements.add(moveTo)
-        path.elements.add(linetTo)
-
-        return path
-    }
-
-    private fun pathLeft(): Path {
-        val path = Path()
-
-        val moveTo = MoveTo(x, y)
-        val linetTo = LineTo(x - CELL_G, y)
-
-        path.elements.add(moveTo)
-        path.elements.add(linetTo)
-
-        return path
+        val pX = centerX - CELL_G * hCells() / 2 + GAP / 2
+        return probeTo(Point2D(pX - CELL_G, centerY))
     }
 
     fun moveDown(): PathTransition {
-        val ptr = PathTransition()
-        ptr.duration = Duration.millis(1000.0)
-        ptr.node = this
-        ptr.path = pathDown()
-        ptr.cycleCount = 1
-        ptr.play()
-        return ptr
+        return move(path(centerX,nextY),1000.0)
     }
 
-
     fun moveRight(): PathTransition {
-        val ptr = PathTransition()
-        ptr.duration = Duration.millis(100.0)
-        ptr.node = this
-        ptr.path = pathRight()
-        ptr.cycleCount = 1
-        ptr.play()
-        return ptr
+        return move(path(centerX + CELL_G, centerY),100.0)
     }
 
     fun moveLeft(): PathTransition {
+        return move(path(centerX - CELL_G, centerY),100.0)
+    }
+
+    private fun move(path: Path, duration: Double): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(100.0)
+        ptr.duration = Duration.millis(duration)
         ptr.node = this
-        ptr.path = pathLeft()
+        ptr.path = path
         ptr.cycleCount = 1
         ptr.play()
         return ptr
+    }
+
+    private fun path(nextX: Double, nextY: Double): Path {
+        val path = Path()
+
+        val moveTo = MoveTo(centerX, centerY)
+        val linetTo = LineTo(nextX, nextY)
+
+        path.elements.add(moveTo)
+        path.elements.add(linetTo)
+
+        return path
     }
 
 }
