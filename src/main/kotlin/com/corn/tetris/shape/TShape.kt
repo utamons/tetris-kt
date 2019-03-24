@@ -4,16 +4,16 @@ import com.corn.tetris.CELL_G
 import com.corn.tetris.CELL_SIZE
 import com.corn.tetris.COLS
 import com.corn.tetris.GAP
-import javafx.animation.*
+import javafx.animation.KeyFrame
+import javafx.animation.KeyValue
+import javafx.animation.PathTransition
+import javafx.animation.Timeline
 import javafx.geometry.Point2D
-import javafx.geometry.Point3D
 import javafx.scene.Group
-import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.*
 import javafx.scene.transform.Rotate
 import javafx.util.Duration
-import javafx.scene.transform.Translate
 
 
 abstract class TShape : Group() {
@@ -70,8 +70,8 @@ abstract class TShape : Group() {
 
     fun shape(angle: Double): TShape {
         val pX = toLeftEdge()
-        val probe = probeTo(Point2D(pX, centerY-vCells()* CELL_G/2 ))
-        if (angle % 180 != 0.0) {
+        val probe = probeTo(Point2D(pX, centerY - vCells() * CELL_G / 2))
+        if (angle % 360 != 0.0) {
             val pvX = pivot().x
             val pvY = pivot().y
             val rotate = Rotate()
@@ -85,25 +85,25 @@ abstract class TShape : Group() {
         return probe;
     }
 
-    fun shapeForFix() : TShape {
+    fun shapeForFix(): TShape {
         val probe = shape(angle)
         probe.translateY += CELL_G
         return probe
     }
 
     fun shapeDown(): TShape {
-        if (angle % 180 == 0.0) {
+        if (angle % 360 == 0.0) {
             val pX = toLeftEdge()
             return probeTo(Point2D(pX, centerY + CELL_G))
         } else {
             val probe = shape(angle)
-            probe.translateY += (CELL_G + CELL_G/2)
+            probe.translateY += (CELL_G + CELL_G / 2)
             return probe;
         }
     }
 
     fun shapeRight(): TShape {
-        if (angle % 180 == 0.0) {
+        if (angle % 360 == 0.0) {
             val pX = toLeftEdge()
             return probeTo(Point2D(pX + CELL_G, centerY))
         } else {
@@ -114,7 +114,7 @@ abstract class TShape : Group() {
     }
 
     fun shapeLeft(): TShape {
-        if (angle % 180 == 0.0) {
+        if (angle % 360 == 0.0) {
             val pX = toLeftEdge()
             return probeTo(Point2D(pX - CELL_G, centerY))
         } else {
@@ -147,15 +147,15 @@ abstract class TShape : Group() {
     }
 
     fun moveDown(): PathTransition {
-        return move(path(centerX,nextY),400.0)
+        return move(path(centerX, nextY), 400.0)
     }
 
     fun moveRight(): PathTransition {
-        return move(path(centerX + CELL_G, centerY),100.0)
+        return move(path(centerX + CELL_G, centerY), 100.0)
     }
 
     fun moveLeft(): PathTransition {
-        return move(path(centerX - CELL_G, centerY),100.0)
+        return move(path(centerX - CELL_G, centerY), 100.0)
     }
 
     private fun move(path: Path, duration: Double): PathTransition {
