@@ -24,6 +24,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private var testShape: TShape
     private val startPoint = startPoint(basePoint)
     private var trDown: PathTransition = PathTransition()
+    private var lock = false
 
     init {
         children.add(container)
@@ -50,40 +51,51 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun processKey(event: KeyEvent) {
+        if (lock)
+            return
+
         when {
             (event.code == KeyCode.UP && canFit(-90.0)) -> {
+                lock = true
                 trDown.stop()
                 currentShape.updatePoint()
                 val pt = currentShape.rotate(-90.0)
                 pt.onFinished = EventHandler {
                     currentShape.updatePoint()
+                    lock = false
                     play()
                 }
             }
             (event.code == KeyCode.DOWN && canFit(90.0)) -> {
+                lock = true
                 trDown.stop()
                 currentShape.updatePoint()
                 val pt = currentShape.rotate(90.0)
                 pt.onFinished = EventHandler {
                     currentShape.updatePoint()
+                    lock = false
                     play()
                 }
             }
             (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft())) -> {
+                lock = true
                 trDown.stop()
                 currentShape.updatePoint()
                 val pt = currentShape.moveLeft()
                 pt.onFinished = EventHandler {
                     currentShape.updatePoint()
+                    lock = false
                     play()
                 }
             }
             (event.code == KeyCode.RIGHT && canFit(currentShape.shapeRight())) -> {
+                lock = true
                 trDown.stop()
                 currentShape.updatePoint()
                 val pt = currentShape.moveRight()
                 pt.onFinished = EventHandler {
                     currentShape.updatePoint()
+                    lock = false
                     play()
                 }
             }

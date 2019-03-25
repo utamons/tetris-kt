@@ -1,5 +1,3 @@
-- Rotation
-  - Implement canFit() for rotations
 - Removing complete rows
 - Score
 - Levels
