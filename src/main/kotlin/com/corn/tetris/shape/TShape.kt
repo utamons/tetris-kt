@@ -68,7 +68,7 @@ abstract class TShape : Group() {
     abstract fun probeTo(basepoint: Point2D): TShape
     abstract fun pivot(): Point2D
 
-    fun shape(angle: Double): TShape {
+    private fun shape(angle: Double): TShape {
         val pX = toLeftEdge()
         val probe = probeTo(Point2D(pX, centerY - vCells() * CELL_G / 2))
         if (angle % 360 != 0.0) {
@@ -83,6 +83,10 @@ abstract class TShape : Group() {
             probe.transforms.add(rotate)
         }
         return probe;
+    }
+
+    fun deltaRotate(delta: Double): TShape {
+        return shape(this.angle + delta);
     }
 
     fun shapeForFix(): TShape {
