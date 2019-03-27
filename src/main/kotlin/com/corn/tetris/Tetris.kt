@@ -36,6 +36,7 @@ class Tetris(basePoint: Point2D) : Group() {
             val row = TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G)))
             children.add(row)
             rows.add(row)
+            row.idx = i
         }
 
         currentShape = feed.currentShape()

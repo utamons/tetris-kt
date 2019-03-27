@@ -1,5 +1,4 @@
 - Removing complete rows
-    - Implement indices for rows
     - Find all complete rows, determine Gaps.
     - Disappearing animation all complete rows.
     In cycle for next upper Gap:

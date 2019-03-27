@@ -22,7 +22,8 @@ class TRow(basePoint: Point2D) : Group() {
     private val fill = ArrayList<Rectangle>()
     private var centerX: Double = 0.0
     private var centerY: Double = 0.0
-    private val createdAt = Date();
+    private val createdAt = Date()
+    var idx = 0
     private val df = SimpleDateFormat("HH:mm:ss")
 
     fun log() : String {
