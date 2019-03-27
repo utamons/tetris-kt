@@ -1,17 +1,30 @@
 package com.corn.tetris
 
 import com.corn.tetris.shape.TShape
+import javafx.animation.PathTransition
 import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.Node
 import javafx.scene.paint.Color
-import javafx.scene.shape.Rectangle
+import javafx.scene.shape.*
+import javafx.util.Duration
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TRow(basePoint: Point2D) : Group() {
 
     private val empty = ArrayList<Rectangle>()
     private val fill = ArrayList<Rectangle>()
+    private var centerX: Double = 0.0
+    private var centerY: Double = 0.0
+    private val createdAt = Date();
+    private val df = SimpleDateFormat("HH:mm:ss")
+
+    fun log() : String {
+        val dateStr = df.format(createdAt)
+        return "${fill.size} $dateStr"
+    }
 
     init {
         (0 until COLS).forEach { i ->
@@ -19,6 +32,14 @@ class TRow(basePoint: Point2D) : Group() {
         }
         layoutX = basePoint.x
         layoutY = basePoint.y
+        this.centerX = (CELL_G) / 2 * COLS - GAP / 2
+        this.centerY = (CELL_G) / 2
+        val circle = Circle(centerX, centerY, GAP, Color.BLACK)
+        children.add(circle)
+    }
+
+    private fun updatePoint() {
+        centerY = (CELL_G) / 2 + translateY
     }
 
     private fun rect(x: Double, y: Double) {
@@ -47,7 +68,7 @@ class TRow(basePoint: Point2D) : Group() {
         val toRemove = ArrayList<Node>()
         val toMove = ArrayList<Node>()
         probe.children.forEach { sChild ->
-            empty.filter { it.intersects(cellBounds(sChild)) }
+            empty.filter { it.intersects(cellBounds(sChild)) && !toMove.contains(it) }
                     .forEach {
                         toRemove.add(sChild)
                         toMove.add(it)
@@ -56,6 +77,37 @@ class TRow(basePoint: Point2D) : Group() {
                     }
         }
         empty.removeAll(toMove)
-        /*shape.children.removeAll(toRemove)*/
+    }
+
+    fun isFull(): Boolean {
+        return fill.size >= COLS
+    }
+
+    fun fall(count: Int): PathTransition {
+        val tr = move(count)
+        updatePoint()
+        return tr
+    }
+
+    private fun path(count: Int): Path {
+        val path = Path()
+
+        val moveTo = MoveTo(centerX, centerY)
+        val linetTo = LineTo(centerX, centerY + CELL_G * count)
+
+        path.elements.add(moveTo)
+        path.elements.add(linetTo)
+
+        return path
+    }
+
+    private fun move(count: Int): PathTransition {
+        val ptr = PathTransition()
+        ptr.duration = Duration.millis(600.0)
+        ptr.node = this
+        ptr.path = path(count)
+        ptr.cycleCount = 1
+        ptr.play()
+        return ptr
     }
 }

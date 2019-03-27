@@ -31,12 +31,9 @@ abstract class TShape : Group() {
         nextY = centerY + CELL_G
     }
 
-    fun updatePoint(): Circle {
+    fun updatePoint() {
         centerY = (CELL_G) / 2 * vCells() + translateY
         centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
-        val circle = Circle(centerX, centerY, GAP, Color.VIOLET)
-        circle.stroke = Color.ALICEBLUE
-        return circle;
     }
 
     fun setNextY() {

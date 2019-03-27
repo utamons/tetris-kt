@@ -25,12 +25,16 @@ class Tetris(basePoint: Point2D) : Group() {
     private val startPoint = startPoint(basePoint)
     private var trDown: PathTransition = PathTransition()
     private var lock = false
+    private var pause = false
+    private val rows = ArrayList<TRow>()
 
     init {
         children.add(container)
 
         (0 until ROWS).forEach { i ->
-            children.add(TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G))))
+            val row = TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G)))
+            children.add(row)
+            rows.add(row)
         }
 
         currentShape = feed.currentShape()
@@ -55,6 +59,13 @@ class Tetris(basePoint: Point2D) : Group() {
             return
 
         when {
+            (event.code == KeyCode.SPACE) -> {
+                if (pause)
+                    trDown.play()
+                else
+                    trDown.stop()
+                pause = !pause
+            }
             (event.code == KeyCode.UP && canFit(-90.0)) -> {
                 lock = true
                 trDown.stop()
@@ -123,20 +134,24 @@ class Tetris(basePoint: Point2D) : Group() {
             (child as TRow).fix(currentShape)
             children.remove(currentShape)
         }
+        processFalling()
+    }
+
+    private fun processFalling() {
+        // todo not implemented
     }
 
     fun play() {
         trDown = currentShape.moveDown()
         trDown.onFinished = EventHandler {
-            //children.remove(testShape)
             testShape = currentShape.shapeDown()
-            //children.add(testShape)
             if (canFit(currentShape.shapeDown())) {
                 currentShape.updatePoint()
                 currentShape.setNextY()
                 play()
             } else {
                 fix()
+
                 currentShape = feed.currentShape()
                 currentShape.startPoint(startPoint)
                 if (canFit(currentShape.shapeDown())) {
