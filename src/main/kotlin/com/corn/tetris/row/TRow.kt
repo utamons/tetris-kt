@@ -1,5 +1,9 @@
-package com.corn.tetris
+package com.corn.tetris.row
 
+import com.corn.tetris.CELL_G
+import com.corn.tetris.CELL_SIZE
+import com.corn.tetris.COLS
+import com.corn.tetris.GAP
 import com.corn.tetris.shape.TShape
 import javafx.animation.PathTransition
 import javafx.geometry.Bounds

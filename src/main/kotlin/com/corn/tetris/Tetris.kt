@@ -1,5 +1,6 @@
 package com.corn.tetris
 
+import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
 import javafx.animation.PathTransition
 import javafx.event.EventHandler
