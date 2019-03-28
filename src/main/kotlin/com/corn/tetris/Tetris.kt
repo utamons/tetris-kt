@@ -144,6 +144,18 @@ class Tetris(basePoint: Point2D) : Group() {
     private fun processFalling() {
         // todo not implemented
         updateGaps()
+        var count = gaps.size
+        gaps.forEach{ gap ->
+            gap.disappear {
+                if (--count == 0) {
+                    gaps.forEach { g->
+                        children.removeAll(g.rows)
+                    }
+                    gaps.clear()
+                    println("Done")
+                }
+            }
+        }
     }
 
     private fun updateGaps() {

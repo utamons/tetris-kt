@@ -15,6 +15,9 @@ import javafx.scene.shape.*
 import javafx.util.Duration
 import java.text.SimpleDateFormat
 import java.util.*
+import javafx.animation.ScaleTransition
+import javafx.event.EventHandler
+
 
 class TRow(basePoint: Point2D) : Group() {
 
@@ -23,6 +26,8 @@ class TRow(basePoint: Point2D) : Group() {
     private var centerX: Double = 0.0
     private var centerY: Double = 0.0
     private val createdAt = Date()
+    private var disappearCounter = 0
+
     var idx = 0
     private val df = SimpleDateFormat("HH:mm:ss")
 
@@ -114,5 +119,24 @@ class TRow(basePoint: Point2D) : Group() {
         ptr.cycleCount = 1
         ptr.play()
         return ptr
+    }
+
+    fun disappear(listener: () -> Unit) {
+        disappearCounter = COLS
+        fill.onEach {
+            val scaleTransition = ScaleTransition()
+            scaleTransition.duration = Duration.millis(500.0)
+            scaleTransition.node = it
+            scaleTransition.byY = -1.0
+            scaleTransition.byX = -1.0
+            scaleTransition.cycleCount = 1
+            scaleTransition.isAutoReverse = false
+            scaleTransition.play()
+            scaleTransition.onFinished = EventHandler {
+                if (--disappearCounter == 0) {
+                    listener()
+                }
+            }
+        }
     }
 }
