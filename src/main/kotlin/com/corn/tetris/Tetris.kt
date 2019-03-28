@@ -1,5 +1,6 @@
 package com.corn.tetris
 
+import com.corn.tetris.row.Gap
 import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
 import javafx.animation.PathTransition
@@ -28,6 +29,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private var lock = false
     private var pause = false
     private val rows = ArrayList<TRow>()
+    private val gaps = ArrayList<Gap>()
 
     init {
         children.add(container)
@@ -141,6 +143,14 @@ class Tetris(basePoint: Point2D) : Group() {
 
     private fun processFalling() {
         // todo not implemented
+        updateGaps()
+    }
+
+    private fun updateGaps() {
+        if (rows.any { it.isFull() && gaps.none { gap -> gap.add(it) } }) {
+            gaps.add(Gap())
+            updateGaps()
+        }
     }
 
     fun play() {
