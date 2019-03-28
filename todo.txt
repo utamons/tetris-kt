@@ -1,5 +1,4 @@
 - Removing complete rows
-    - Disappearing animation all complete rows.
     In cycle for next upper Gap:
         - Delete all rows in the Gap.
         - Create a Group of all rows above the Gap.

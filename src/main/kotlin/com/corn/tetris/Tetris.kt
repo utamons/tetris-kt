@@ -142,12 +142,12 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun processFalling() {
-        // todo not implemented
         updateGaps()
         var count = gaps.size
         gaps.forEach{ gap ->
             gap.disappear {
                 if (--count == 0) {
+                    // todo place falling code here
                     gaps.forEach { g->
                         children.removeAll(g.rows)
                     }
