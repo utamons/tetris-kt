@@ -23,8 +23,6 @@ class TRow(basePoint: Point2D) : Group() {
 
     private val empty = ArrayList<Rectangle>()
     private val fill = ArrayList<Rectangle>()
-    private var centerX: Double = 0.0
-    private var centerY: Double = 0.0
     private val createdAt = Date()
     private var disappearCounter = 0
 
@@ -42,15 +40,8 @@ class TRow(basePoint: Point2D) : Group() {
         }
         layoutX = basePoint.x
         layoutY = basePoint.y
-        this.centerX = (CELL_G) / 2 * COLS - GAP / 2
-        this.centerY = (CELL_G) / 2
-        val circle = Circle(centerX, centerY, GAP, Color.BLACK)
-        children.add(circle)
     }
 
-    private fun updatePoint() {
-        centerY = (CELL_G) / 2 + translateY
-    }
 
     private fun rect(x: Double, y: Double) {
         val rect = Rectangle(CELL_SIZE, CELL_SIZE)
@@ -93,39 +84,11 @@ class TRow(basePoint: Point2D) : Group() {
         return fill.size >= COLS
     }
 
-    fun fall(count: Int): PathTransition {
-        val tr = move(count)
-        updatePoint()
-        return tr
-    }
-
-    private fun path(count: Int): Path {
-        val path = Path()
-
-        val moveTo = MoveTo(centerX, centerY)
-        val linetTo = LineTo(centerX, centerY + CELL_G * count)
-
-        path.elements.add(moveTo)
-        path.elements.add(linetTo)
-
-        return path
-    }
-
-    private fun move(count: Int): PathTransition {
-        val ptr = PathTransition()
-        ptr.duration = Duration.millis(600.0)
-        ptr.node = this
-        ptr.path = path(count)
-        ptr.cycleCount = 1
-        ptr.play()
-        return ptr
-    }
-
     fun disappear(listener: () -> Unit) {
         disappearCounter = COLS
         fill.onEach {
             val scaleTransition = ScaleTransition()
-            scaleTransition.duration = Duration.millis(500.0)
+            scaleTransition.duration = Duration.millis(100.0)
             scaleTransition.node = it
             scaleTransition.byY = -1.0
             scaleTransition.byX = -1.0

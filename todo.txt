@@ -1,7 +1,7 @@
 - Removing complete rows
     In cycle for next upper Gap:
-        - Delete all rows in the Gap.
         - Create a Group of all rows above the Gap.
+        - Delete all rows in the Gap.
         - Move a Group down to the end of the Gap.
         - Add new rows above the Group.
     - play() again.
