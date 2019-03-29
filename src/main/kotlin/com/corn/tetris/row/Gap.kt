@@ -7,12 +7,8 @@ class Gap {
     val min: Int
         get() = rows.minBy { it -> it.idx }?.idx ?: -1
 
-    val max: Int
-        get() = rows.maxBy { it -> it.idx }?.idx ?: -1
-
     val size: Int
         get() = rows.size
-
 
     fun add(r: TRow): Boolean {
         return if (rows.size != 0 && rows.none { Math.abs(it.idx - r.idx) == 1 })

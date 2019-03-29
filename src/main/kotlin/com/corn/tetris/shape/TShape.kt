@@ -148,7 +148,7 @@ abstract class TShape : Group() {
     }
 
     fun moveDown(): PathTransition {
-        return move(path(centerX, nextY), 400.0)
+        return move(path(centerX, nextY), 200.0)
     }
 
     fun moveRight(): PathTransition {

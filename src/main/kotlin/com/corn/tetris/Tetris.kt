@@ -1,6 +1,7 @@
 package com.corn.tetris
 
 import com.corn.tetris.row.Gap
+import com.corn.tetris.row.TGroup
 import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
 import javafx.animation.PathTransition
@@ -30,6 +31,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private var pause = false
     private val rows = ArrayList<TRow>()
     private val gaps = ArrayList<Gap>()
+    private val groups = ArrayList<TGroup>()
 
     init {
         children.add(container)
@@ -144,17 +146,45 @@ class Tetris(basePoint: Point2D) : Group() {
     private fun processFalling() {
         updateGaps()
         var count = gaps.size
-        gaps.forEach{ gap ->
+        gaps.forEach { gap ->
             gap.disappear {
                 if (--count == 0) {
-                    // todo place falling code here
-                    gaps.forEach { g->
-                        children.removeAll(g.rows)
+                    gaps.forEach { g ->
+                        fall(g) {
+                            children.removeAll(g.rows)
+                            rows.removeAll(g.rows)
+                            (0 until g.size).forEach { i ->
+                                val row = TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G)))
+                                children.add(row)
+                                rows.add(0, row)
+                                row.idx = i
+                            }
+                            updatePos()
+                        }
                     }
                     gaps.clear()
                     println("Done")
                 }
             }
+        }
+    }
+
+    // todo Process async falling all gaps
+
+    private fun fall(gap: Gap, listener: () -> Unit) {
+        val group = TGroup(rows.filter { it.idx < gap.min })
+        children.add(group);
+        group.fall(gap.size) {
+            children.addAll(group.children)
+            group.children.clear()
+            children.remove(group)
+            listener()
+        }
+    }
+
+    private fun updatePos() {
+        rows.onEach { r->
+            r.layoutY = startPoint.y + r.idx * CELL_G
         }
     }
 

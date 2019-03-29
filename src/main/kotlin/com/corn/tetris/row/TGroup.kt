@@ -4,20 +4,21 @@ import com.corn.tetris.CELL_G
 import com.corn.tetris.COLS
 import com.corn.tetris.GAP
 import javafx.animation.PathTransition
+import javafx.event.EventHandler
 import javafx.scene.Group
+import javafx.scene.paint.Color
+import javafx.scene.shape.Circle
 import javafx.scene.shape.LineTo
 import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.Duration
 
-class TGroup : Group() {
-    val rows = ArrayList<TRow>()
+class TGroup(private val rows: List<TRow>) : Group() {
 
-    fun add(r: TRow): Boolean {
-        return if (rows.size != 0 && rows.none { Math.abs(it.idx - r.idx) == 1 })
-            false
-        else
-            rows.add(r)
+    init {
+        children.addAll(rows)
+        layoutX = rows[0].layoutX
+        layoutY = rows[0].layoutY
     }
 
     private fun path(count: Int): Path {
@@ -40,7 +41,7 @@ class TGroup : Group() {
         return rows.size * CELL_G / 2
     }
 
-    private fun move(count: Int): PathTransition {
+    fun fall(count: Int, listener: () -> Unit): PathTransition {
         val ptr = PathTransition()
         ptr.duration = Duration.millis(600.0)
         ptr.node = this
@@ -48,7 +49,12 @@ class TGroup : Group() {
         ptr.cycleCount = 1
         ptr.play()
 
-        rows.onEach { it.idx += count }
+        ptr.onFinished = EventHandler {
+            rows.onEach {
+                it.idx += count
+            }
+            listener()
+        }
 
         return ptr
     }

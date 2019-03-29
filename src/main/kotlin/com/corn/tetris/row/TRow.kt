@@ -23,16 +23,13 @@ class TRow(basePoint: Point2D) : Group() {
 
     private val empty = ArrayList<Rectangle>()
     private val fill = ArrayList<Rectangle>()
+    var centerX: Double = 0.0
+    var centerY: Double = 0.0
     private val createdAt = Date()
     private var disappearCounter = 0
 
     var idx = 0
     private val df = SimpleDateFormat("HH:mm:ss")
-
-    fun log() : String {
-        val dateStr = df.format(createdAt)
-        return "${fill.size} $dateStr"
-    }
 
     init {
         (0 until COLS).forEach { i ->
@@ -40,8 +37,15 @@ class TRow(basePoint: Point2D) : Group() {
         }
         layoutX = basePoint.x
         layoutY = basePoint.y
+        this.centerX = (CELL_G) / 2 * COLS - GAP / 2
+        this.centerY = (CELL_G) / 2
+        val circle = Circle(centerX, centerY, GAP, Color.BLACK)
+        children.add(circle)
     }
 
+    fun updatePoint() {
+        centerY = (CELL_G) / 2 + translateY
+    }
 
     private fun rect(x: Double, y: Double) {
         val rect = Rectangle(CELL_SIZE, CELL_SIZE)
