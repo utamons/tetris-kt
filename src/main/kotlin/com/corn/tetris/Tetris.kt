@@ -4,12 +4,18 @@ import com.corn.tetris.row.Gap
 import com.corn.tetris.row.TGroup
 import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
+import javafx.animation.Animation
 import javafx.animation.PathTransition
+import javafx.beans.value.ChangeListener
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import javax.print.attribute.standard.PrinterState.STOPPED
+import javafx.beans.value.ObservableValue
+
+
 
 const val CELL_SIZE = 45.0
 const val GAP = 4.0
@@ -57,8 +63,10 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun processKey(event: KeyEvent) {
-        if (lock)
+        if (lock) {
+            println("Locked")
             return
+        }
 
         when {
             (event.code == KeyCode.SPACE) -> {
@@ -74,7 +82,6 @@ class Tetris(basePoint: Point2D) : Group() {
                 currentShape.updatePoint()
                 val pt = currentShape.rotate(-90.0)
                 pt.onFinished = EventHandler {
-                    currentShape.updatePoint()
                     play()
                     lock = false
                 }
@@ -85,7 +92,6 @@ class Tetris(basePoint: Point2D) : Group() {
                 currentShape.updatePoint()
                 val pt = currentShape.rotate(90.0)
                 pt.onFinished = EventHandler {
-                    currentShape.updatePoint()
                     play()
                     lock = false
                 }
@@ -135,7 +141,6 @@ class Tetris(basePoint: Point2D) : Group() {
         rows.forEach { row ->
             row.fix(currentShape)
         }
-        println("Fixed")
         children.remove(currentShape)
         processFalling()
     }
@@ -152,7 +157,7 @@ class Tetris(basePoint: Point2D) : Group() {
         }
     }
 
-    private fun fall (i: Int) {
+    private fun fall(i: Int) {
         if (i == gaps.size) {
             gaps.clear()
             println("Felt")
@@ -167,7 +172,7 @@ class Tetris(basePoint: Point2D) : Group() {
                     row.idx = i
                 }
                 updatePos()
-                fall(i+1)
+                fall(i + 1)
             }
         }
     }
@@ -184,14 +189,14 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun updatePos() {
-        rows.onEach { r->
+        rows.onEach { r ->
             r.layoutY = startPoint.y + r.idx * CELL_G
         }
     }
 
     private fun updateGaps() {
         rows.filter { it.isFull() && gaps.none { gap -> gap.rows.contains(it) } }.forEach { row ->
-            if (gaps.none {gap-> gap.add(row)}) {
+            if (gaps.none { gap -> gap.add(row) }) {
                 val gap = Gap()
                 gap.add(row)
                 gaps.add(gap)

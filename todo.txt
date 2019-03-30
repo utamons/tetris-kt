@@ -1,12 +1,11 @@
-- Bugs:
-  - Sometimes rotating shapes disappear
-  - 'C' shape sometimes fixes wrong
-
 - Score
 - Levels
 - Tests
 - Comments
 - Readme.rd
+
+- Bugs:
+  - Shape fixes wrong right after rotate
 
 - Code cleanup according to Kotlin guidelines
 

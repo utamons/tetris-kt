@@ -32,8 +32,14 @@ abstract class TShape : Group() {
     }
 
     fun updatePoint() {
-        centerY = (CELL_G) / 2 * vCells() + translateY
-        centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
+        val trX = translateX
+        val trY = translateY
+        if (trX.isNaN() || trY.isNaN()) {
+            println("Got NaN!")
+            return
+        }
+        centerY = (CELL_G) / 2 * vCells() + trY
+        centerX = CELL_G * hCells() / 2 + GAP / 2 + trX - GAP
     }
 
     fun setNextY() {
@@ -171,8 +177,13 @@ abstract class TShape : Group() {
 
     private fun path(nextX: Double, nextY: Double): Path {
         val path = Path()
+        var delta = 0.0
 
-        val moveTo = MoveTo(centerX, centerY)
+        if (nextY - centerY < 1.0) {
+            delta = 1.0
+        }
+
+        val moveTo = MoveTo(centerX, centerY - delta)
         val linetTo = LineTo(nextX, nextY)
 
         path.elements.add(moveTo)
