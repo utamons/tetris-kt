@@ -80,7 +80,7 @@ class TRow(basePoint: Point2D) : Group() {
         disappearCounter = COLS
         fill.onEach {
             val scaleTransition = ScaleTransition()
-            scaleTransition.duration = Duration.millis(100.0)
+            scaleTransition.duration = Duration.millis(150.0)
             scaleTransition.node = it
             scaleTransition.byY = -1.0
             scaleTransition.byX = -1.0

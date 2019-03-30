@@ -32,14 +32,8 @@ abstract class TShape : Group() {
     }
 
     fun updatePoint() {
-        val trX = translateX
-        val trY = translateY
-        if (trX.isNaN() || trY.isNaN()) {
-            println("Got NaN!")
-            return
-        }
-        centerY = (CELL_G) / 2 * vCells() + trY
-        centerX = CELL_G * hCells() / 2 + GAP / 2 + trX - GAP
+        centerY = (CELL_G) / 2 * vCells() + translateY
+        centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
     }
 
     fun setNextY() {

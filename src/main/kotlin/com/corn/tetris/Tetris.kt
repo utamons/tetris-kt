@@ -165,24 +165,23 @@ class Tetris(basePoint: Point2D) : Group() {
             fall(gaps[i]) {
                 children.removeAll(gaps[i].rows)
                 rows.removeAll(gaps[i].rows)
-                (0 until gaps[i].size).forEach { i ->
-                    val row = TRow(Point2D(startPoint.x, startPoint.y + i * (CELL_G)))
-                    children.add(row)
+                (0 until gaps[i].size).forEach { j ->
+                    val row = TRow(Point2D(startPoint.x, startPoint.y + j * (CELL_G)))
                     rows.add(0, row)
-                    row.idx = i
+                    updatePos()
+                    children.add(row)
+                    row.idx = j
                 }
-                updatePos()
                 fall(i + 1)
             }
         }
     }
 
     private fun fall(gap: Gap, listener: () -> Unit) {
-        val group = TGroup(rows.filter { it.idx < gap.min })
+        val group = TGroup(startPoint,rows.filter { it.idx < gap.min })
         children.add(group)
         group.fall(gap.size) {
             children.addAll(group.children)
-            group.children.clear()
             children.remove(group)
             listener()
         }
