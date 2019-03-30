@@ -5,18 +5,16 @@ import com.corn.tetris.CELL_SIZE
 import com.corn.tetris.COLS
 import com.corn.tetris.GAP
 import com.corn.tetris.shape.TShape
-import javafx.animation.PathTransition
+import javafx.animation.ScaleTransition
+import javafx.event.EventHandler
 import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.Node
 import javafx.scene.paint.Color
-import javafx.scene.shape.*
+import javafx.scene.shape.Rectangle
 import javafx.util.Duration
-import java.text.SimpleDateFormat
 import java.util.*
-import javafx.animation.ScaleTransition
-import javafx.event.EventHandler
 
 
 class TRow(basePoint: Point2D) : Group() {
@@ -25,11 +23,9 @@ class TRow(basePoint: Point2D) : Group() {
     private val fill = ArrayList<Rectangle>()
     var centerX: Double = 0.0
     var centerY: Double = 0.0
-    private val createdAt = Date()
     private var disappearCounter = 0
 
     var idx = 0
-    private val df = SimpleDateFormat("HH:mm:ss")
 
     init {
         (0 until COLS).forEach { i ->
@@ -39,12 +35,6 @@ class TRow(basePoint: Point2D) : Group() {
         layoutY = basePoint.y
         this.centerX = (CELL_G) / 2 * COLS - GAP / 2
         this.centerY = (CELL_G) / 2
-        val circle = Circle(centerX, centerY, GAP, Color.BLACK)
-        children.add(circle)
-    }
-
-    fun updatePoint() {
-        centerY = (CELL_G) / 2 + translateY
     }
 
     private fun rect(x: Double, y: Double) {
