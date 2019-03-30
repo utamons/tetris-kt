@@ -1,4 +1,6 @@
-- Removing complete rows
+- Bugs:
+  - Sometimes rotating shapes disappear
+  - 'C' shape sometimes fixes wrong
 
 - Score
 - Levels

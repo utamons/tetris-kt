@@ -132,10 +132,11 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun fix() {
-        children.filtered { it is TRow }.forEach { child ->
-            (child as TRow).fix(currentShape)
-            children.remove(currentShape)
+        rows.forEach { row ->
+            row.fix(currentShape)
         }
+        println("Fixed")
+        children.remove(currentShape)
         processFalling()
     }
 
@@ -154,7 +155,7 @@ class Tetris(basePoint: Point2D) : Group() {
     private fun fall (i: Int) {
         if (i == gaps.size) {
             gaps.clear()
-            println("Done")
+            println("Felt")
         } else {
             fall(gaps[i]) {
                 children.removeAll(gaps[i].rows)
@@ -189,9 +190,12 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun updateGaps() {
-        if (rows.any { it.isFull() && gaps.none { gap -> gap.add(it) } }) {
-            gaps.add(Gap())
-            updateGaps()
+        rows.filter { it.isFull() && gaps.none { gap -> gap.rows.contains(it) } }.forEach { row ->
+            if (gaps.none {gap-> gap.add(row)}) {
+                val gap = Gap()
+                gap.add(row)
+                gaps.add(gap)
+            }
         }
     }
 

@@ -60,12 +60,10 @@ class TRow(basePoint: Point2D) : Group() {
 
     fun fix(shape: TShape) {
         val probe = shape.shapeForFix()
-        val toRemove = ArrayList<Node>()
         val toMove = ArrayList<Node>()
         probe.children.forEach { sChild ->
             empty.filter { it.intersects(cellBounds(sChild)) && !toMove.contains(it) }
                     .forEach {
-                        toRemove.add(sChild)
                         toMove.add(it)
                         fill.add(it)
                         it.fill = Color.VIOLET
