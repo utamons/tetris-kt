@@ -22,8 +22,8 @@ abstract class TShape : Group() {
     var centerY: Double = 0.0
     private var nextY: Double = 0.0
     private var angle: Double = 0.0
-    var speed = 800.0
-    var rotateSpeed = 300.0
+    var speed = 300.0
+    var rotateSpeed = 100.0
 
     fun startPoint(startPoint: Point2D) {
         layoutX = 0.0
