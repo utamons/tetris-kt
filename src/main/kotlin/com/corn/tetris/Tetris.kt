@@ -4,17 +4,13 @@ import com.corn.tetris.row.Gap
 import com.corn.tetris.row.TGroup
 import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
-import javafx.animation.Animation
 import javafx.animation.PathTransition
-import javafx.beans.value.ChangeListener
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import javax.print.attribute.standard.PrinterState.STOPPED
-import javafx.beans.value.ObservableValue
-
+import javafx.util.Duration
 
 
 const val CELL_SIZE = 45.0
@@ -78,10 +74,12 @@ class Tetris(basePoint: Point2D) : Group() {
             }
             (event.code == KeyCode.UP && canFit(-90.0)) -> {
                 lock = true
+                val y = currentShape.translateY
                 trDown.stop()
-                currentShape.updatePoint()
                 val pt = currentShape.rotate(-90.0)
                 pt.onFinished = EventHandler {
+                    currentShape.translateY = y
+                    currentShape.updatePoint()
                     play()
                     lock = false
                 }
@@ -126,7 +124,7 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun canFit(angle: Double): Boolean {
-        val delta = angle / 18.0
+        val delta = angle / 90.0
         var count = 0.0
         while (count != angle) {
             if (!canFit(currentShape.deltaRotate(count))) {
@@ -178,7 +176,7 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun fall(gap: Gap, listener: () -> Unit) {
-        val group = TGroup(startPoint,rows.filter { it.idx < gap.min })
+        val group = TGroup(startPoint, rows.filter { it.idx < gap.min })
         children.add(group)
         group.fall(gap.size) {
             children.addAll(group.children)

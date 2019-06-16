@@ -4,7 +4,9 @@ import javafx.application.Application
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.Scene
+import javafx.scene.paint.Paint
 import javafx.stage.Stage
+import java.awt.Color
 
 class TetrisApp : Application() {
 
@@ -16,7 +18,7 @@ class TetrisApp : Application() {
         tetris.play()
         root.children.addAll(tetris)
 
-        primaryStage.scene = Scene(root, 900.0, 1100.0)
+        primaryStage.scene = Scene(root, 900.0, 1100.0, Paint.valueOf("White"))
         primaryStage.show()
         tetris.requestFocus()
     }

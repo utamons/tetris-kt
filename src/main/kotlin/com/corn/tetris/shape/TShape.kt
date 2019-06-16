@@ -19,7 +19,7 @@ import javafx.util.Duration
 abstract class TShape : Group() {
 
     private var centerX: Double = 0.0
-    private var centerY: Double = 0.0
+    var centerY: Double = 0.0
     private var nextY: Double = 0.0
     private var angle: Double = 0.0
 
@@ -65,9 +65,9 @@ abstract class TShape : Group() {
     abstract fun probeTo(basepoint: Point2D): TShape
     abstract fun pivot(): Point2D
 
-    private fun shape(angle: Double): TShape {
+    private fun shape(angle: Double, y: Double): TShape {
         val pX = toLeftEdge()
-        val probe = probeTo(Point2D(pX, centerY - vCells() * CELL_G / 2))
+        val probe = probeTo(Point2D(pX, y))
         if (angle % 360 != 0.0) {
             val pvX = pivot().x
             val pvY = pivot().y
@@ -83,11 +83,11 @@ abstract class TShape : Group() {
     }
 
     fun deltaRotate(delta: Double): TShape {
-        return shape(this.angle + delta);
+        return shape(this.angle + delta, translateY);
     }
 
     fun shapeForFix(): TShape {
-        val probe = shape(angle)
+        val probe = shape(angle, translateY - vCells() * CELL_G / 2)
         probe.translateY += CELL_G
         return probe
     }
@@ -97,7 +97,7 @@ abstract class TShape : Group() {
             val pX = toLeftEdge()
             return probeTo(Point2D(pX, centerY + CELL_G))
         } else {
-            val probe = shape(angle)
+            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
             probe.translateY += (CELL_G + CELL_G / 2)
             return probe;
         }
@@ -108,7 +108,7 @@ abstract class TShape : Group() {
             val pX = toLeftEdge()
             return probeTo(Point2D(pX + CELL_G, centerY))
         } else {
-            val probe = shape(angle)
+            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
             probe.translateX += CELL_G
             return probe;
         }
@@ -119,7 +119,7 @@ abstract class TShape : Group() {
             val pX = toLeftEdge()
             return probeTo(Point2D(pX - CELL_G, centerY))
         } else {
-            val probe = shape(angle)
+            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
             probe.translateX -= CELL_G
             return probe;
         }
@@ -134,7 +134,7 @@ abstract class TShape : Group() {
         rotationAnimation.keyFrames
                 .add(
                         KeyFrame(
-                                Duration.millis(100.0),
+                                Duration.millis(300.0),
                                 KeyValue(
                                         rotationTransform.angleProperty(),
                                         angle
@@ -148,15 +148,15 @@ abstract class TShape : Group() {
     }
 
     fun moveDown(): PathTransition {
-        return move(path(centerX, nextY), 200.0)
+        return move(path(centerX, nextY), 800.0)
     }
 
     fun moveRight(): PathTransition {
-        return move(path(centerX + CELL_G, centerY), 100.0)
+        return move(path(centerX + CELL_G, centerY), 300.0)
     }
 
     fun moveLeft(): PathTransition {
-        return move(path(centerX - CELL_G, centerY), 100.0)
+        return move(path(centerX - CELL_G, centerY), 300.0)
     }
 
     private fun move(path: Path, duration: Double): PathTransition {
