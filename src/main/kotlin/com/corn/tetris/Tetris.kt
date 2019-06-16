@@ -10,7 +10,6 @@ import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import javafx.util.Duration
 
 
 const val CELL_SIZE = 45.0
@@ -84,15 +83,8 @@ class Tetris(basePoint: Point2D) : Group() {
                     lock = false
                 }
             }
-            (event.code == KeyCode.DOWN && canFit(90.0)) -> {
-                lock = true
-                trDown.stop()
-                currentShape.updatePoint()
-                val pt = currentShape.rotate(90.0)
-                pt.onFinished = EventHandler {
-                    play()
-                    lock = false
-                }
+            (event.code == KeyCode.DOWN) -> {
+                currentShape.speed = 10.0
             }
             (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft())) -> {
                 lock = true

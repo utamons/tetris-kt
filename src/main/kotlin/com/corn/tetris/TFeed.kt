@@ -18,12 +18,12 @@ class TFeed {
     }
 
     private fun getShape(): TShape {
-        val idx = Random.nextInt(4)
+        val idx = Random.nextInt(2)
         return when (idx) {
-            0 -> TLine()
-            1 -> TCform()
-            2 -> TLform()
-            3 -> TTform()
+           // 0 -> TLine()
+            0 -> TCform()
+          //  2 -> TLform()
+            1 -> TTform()
             else -> TCube()
         }
     }

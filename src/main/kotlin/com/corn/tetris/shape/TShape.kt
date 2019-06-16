@@ -22,6 +22,8 @@ abstract class TShape : Group() {
     var centerY: Double = 0.0
     private var nextY: Double = 0.0
     private var angle: Double = 0.0
+    var speed = 800.0
+    var rotateSpeed = 300.0
 
     fun startPoint(startPoint: Point2D) {
         layoutX = 0.0
@@ -87,8 +89,7 @@ abstract class TShape : Group() {
     }
 
     fun shapeForFix(): TShape {
-        val probe = shape(angle, translateY - vCells() * CELL_G / 2)
-        probe.translateY += CELL_G
+        val probe = shape(angle, centerY - vCells() * CELL_G / 2+ CELL_G)
         return probe
     }
 
@@ -134,7 +135,7 @@ abstract class TShape : Group() {
         rotationAnimation.keyFrames
                 .add(
                         KeyFrame(
-                                Duration.millis(300.0),
+                                Duration.millis(rotateSpeed),
                                 KeyValue(
                                         rotationTransform.angleProperty(),
                                         angle
@@ -148,15 +149,15 @@ abstract class TShape : Group() {
     }
 
     fun moveDown(): PathTransition {
-        return move(path(centerX, nextY), 800.0)
+        return move(path(centerX, nextY), speed)
     }
 
     fun moveRight(): PathTransition {
-        return move(path(centerX + CELL_G, centerY), 300.0)
+        return move(path(centerX + CELL_G, centerY), 100.0)
     }
 
     fun moveLeft(): PathTransition {
-        return move(path(centerX - CELL_G, centerY), 300.0)
+        return move(path(centerX - CELL_G, centerY), 100.0)
     }
 
     private fun move(path: Path, duration: Double): PathTransition {
