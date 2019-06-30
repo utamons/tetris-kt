@@ -33,15 +33,6 @@ abstract class TShape : Group() {
         nextY = centerY + CELL_G
     }
 
-    fun updatePoint() {
-        centerY = (CELL_G) / 2 * vCells() + translateY
-        centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
-    }
-
-    fun setNextY() {
-        nextY = centerY + CELL_G
-    }
-
     private val color = Color.DARKGREEN
 
     protected fun rect(x: Double, y: Double) {
@@ -54,77 +45,9 @@ abstract class TShape : Group() {
         children.add(rect)
     }
 
-    protected fun probeRect(x: Double, y: Double, shape: TShape) {
-        val rect = Rectangle(CELL_SIZE, CELL_SIZE)
-        rect.fill = Color.RED
-        rect.x = x
-        rect.y = y
-        shape.children.add(rect)
-    }
-
     abstract fun hCells(): Int
     abstract fun vCells(): Int
-    abstract fun probeTo(basepoint: Point2D): TShape
     abstract fun pivot(): Point2D
-
-    private fun shape(angle: Double, y: Double): TShape {
-        val pX = toLeftEdge()
-        val probe = probeTo(Point2D(pX, y))
-        if (angle % 360 != 0.0) {
-            val pvX = pivot().x
-            val pvY = pivot().y
-            val rotate = Rotate()
-            val circle = Circle(pvX, pvY, GAP, Color.BLACK)
-            probe.children.add(circle)
-            rotate.angle = angle
-            rotate.pivotX = pvX
-            rotate.pivotY = pvY
-            probe.transforms.add(rotate)
-        }
-        return probe;
-    }
-
-    fun deltaRotate(delta: Double): TShape {
-        return shape(this.angle + delta, translateY);
-    }
-
-    fun shapeForFix(): TShape {
-        val probe = shape(angle, centerY - vCells() * CELL_G / 2+ CELL_G)
-        return probe
-    }
-
-    fun shapeDown(): TShape {
-        if (angle % 360 == 0.0) {
-            val pX = toLeftEdge()
-            return probeTo(Point2D(pX, centerY + CELL_G))
-        } else {
-            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
-            probe.translateY += (CELL_G + CELL_G / 2)
-            return probe;
-        }
-    }
-
-    fun shapeRight(): TShape {
-        if (angle % 360 == 0.0) {
-            val pX = toLeftEdge()
-            return probeTo(Point2D(pX + CELL_G, centerY))
-        } else {
-            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
-            probe.translateX += CELL_G
-            return probe;
-        }
-    }
-
-    fun shapeLeft(): TShape {
-        if (angle % 360 == 0.0) {
-            val pX = toLeftEdge()
-            return probeTo(Point2D(pX - CELL_G, centerY))
-        } else {
-            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
-            probe.translateX -= CELL_G
-            return probe;
-        }
-    }
 
 
     fun rotate(angle: Double): Timeline {
@@ -186,6 +109,4 @@ abstract class TShape : Group() {
 
         return path
     }
-
-    private fun toLeftEdge() = centerX - CELL_G * hCells() / 2 + GAP / 2
 }
