@@ -48,9 +48,9 @@ class TRow(basePoint: Point2D) : Group() {
         empty.add(rect)
     }
 
-    fun canFit(shape: TShape): Boolean {
+    fun canFit(bounds: List<Bounds>): Boolean {
         return fill.none { child ->
-            shape.children.any { child.intersects(cellBounds(it)) }
+            bounds.any { child.intersects(sceneToLocal(it)) }
         }
     }
 
@@ -58,10 +58,10 @@ class TRow(basePoint: Point2D) : Group() {
         return sceneToLocal(cell.localToScene(cell.boundsInLocal))
     }
 
-    fun fix(shape: TShape) {
+    fun fix(bounds: List<Bounds>) {
         val toMove = ArrayList<Node>()
-        shape.children.forEach { sChild ->
-            empty.filter { it.intersects(cellBounds(sChild)) && !toMove.contains(it) }
+        bounds.forEach { b ->
+            empty.filter { it.intersects(sceneToLocal(b)) && !toMove.contains(it) }
                     .forEach {
                         toMove.add(it)
                         fill.add(it)

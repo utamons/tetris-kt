@@ -1,7 +1,5 @@
 package com.corn.tetris
 
-import com.corn.tetris.row.Gap
-import com.corn.tetris.row.TGroup
 import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
 import javafx.animation.PathTransition
@@ -79,8 +77,9 @@ class Tetris(basePoint: Point2D) : Group() {
         }
     }
 
-    private fun canFit(probe: TShape): Boolean {
-        throw NotImplementedError();
+    private fun canFit(): Boolean {
+        val b = currentShape.boundsDown();
+        return b.all { it.minY < rows[ROWS - 1].boundsInParent.maxY } && rows.all { it.canFit(b) }
     }
 
     private fun canFit(angle: Double): Boolean {
@@ -88,20 +87,35 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun fix() {
-        throw NotImplementedError();
+        rows.forEach {
+            it.fix(currentShape.allBounds())
+        }
     }
 
 
     fun play() {
-        trDown = currentShape.moveDown()
-        /*trDown.onFinished = EventHandler {
-            if (canFit(currentShape.shapeDown())) {
-                // do something
+        if (canFit()) {
+            trDown = currentShape.moveDown()
+            trDown.onFinished = EventHandler {
+                currentShape.centerY = currentShape.centerY + CELL_G;
+                currentShape.nextY = currentShape.centerY + CELL_G
                 play()
-            } else {
-                fix()
             }
-        }*/
+        } else {
+            println("fix")
+            fix()
+            children.remove(currentShape)
+            children.remove(nextShape)
+            currentShape = feed.currentShape()
+
+            currentShape.startPoint(startPoint)
+
+            nextShape = feed.nextShape()
+            nextShape.translateY = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
+            nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
+            children.add(currentShape)
+            children.add(nextShape)
+        }
     }
 
     private fun startPoint(basePoint: Point2D): Point2D {

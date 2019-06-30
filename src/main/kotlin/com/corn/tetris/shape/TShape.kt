@@ -8,11 +8,13 @@ import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.PathTransition
 import javafx.animation.Timeline
+import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
 import javafx.scene.shape.*
 import javafx.scene.transform.Rotate
+import javafx.scene.transform.Translate
 import javafx.util.Duration
 
 
@@ -20,7 +22,7 @@ abstract class TShape : Group() {
 
     private var centerX: Double = 0.0
     var centerY: Double = 0.0
-    private var nextY: Double = 0.0
+    var nextY: Double = 0.0
     private var angle: Double = 0.0
     var speed = 300.0
     var rotateSpeed = 100.0
@@ -28,10 +30,16 @@ abstract class TShape : Group() {
     fun startPoint(startPoint: Point2D) {
         layoutX = 0.0
         layoutY = 0.0
-        this.centerX = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
-        this.centerY = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
+        this.centerX = centerX(startPoint)
+        this.centerY = centerY(startPoint)
         nextY = centerY + CELL_G
     }
+
+    private fun centerY(startPoint: Point2D) = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
+
+    private fun centerX(startPoint: Point2D) =
+            startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
+
 
     private val color = Color.DARKGREEN
 
@@ -49,6 +57,18 @@ abstract class TShape : Group() {
     abstract fun vCells(): Int
     abstract fun pivot(): Point2D
 
+    fun allBounds() : List<Bounds> {
+        return children.map {it.localToScene(it.boundsInLocal)}
+    }
+
+    fun boundsDown() : List<Bounds> {
+        val tr = Translate();
+        tr.y += CELL_G
+        return children.map {
+            val bounds = it.localToScene(it.boundsInLocal)
+            tr.transform(bounds)
+        }
+    }
 
     fun rotate(angle: Double): Timeline {
         this.angle += angle
