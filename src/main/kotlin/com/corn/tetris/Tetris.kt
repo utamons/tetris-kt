@@ -5,7 +5,9 @@ import com.corn.tetris.row.TGroup
 import com.corn.tetris.row.TRow
 import com.corn.tetris.shape.TShape
 import javafx.animation.PathTransition
+import javafx.animation.Timeline
 import javafx.event.EventHandler
+import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
@@ -26,7 +28,8 @@ class Tetris(basePoint: Point2D) : Group() {
     private var currentShape: TShape
     private var nextShape: TShape
     private val startPoint = startPoint(basePoint)
-    private var trDown: PathTransition = PathTransition()
+    private var tr: PathTransition = PathTransition()
+    private var tl: Timeline = Timeline()
     private var lock = false
     private var pause = false
     private val rows = ArrayList<TRow>()
@@ -64,72 +67,82 @@ class Tetris(basePoint: Point2D) : Group() {
         }
 
         when {
-            (event.code == KeyCode.SPACE) -> {
+            (event.code == KeyCode.P) -> {
                 if (pause)
-                    trDown.play()
+                    tr.play()
                 else
-                    trDown.stop()
+                    tr.stop()
                 pause = !pause
             }
-            (event.code == KeyCode.UP && canFit(-90.0)) -> {
-                lock = true
-                val y = currentShape.translateY
-                trDown.stop()
-                val pt = currentShape.rotate(-90.0)
-                pt.onFinished = EventHandler {
-                    currentShape.translateY = y
+            (event.code == KeyCode.UP && canFit(currentShape.angle)) -> {
+                tr.stop()
+                currentShape.updatePoint()
+                tl = currentShape.rotate(90.0)
+                tl.onFinished = EventHandler {
                     currentShape.updatePoint()
-                    play()
-                    lock = false
+                    tr = currentShape.moveDown();
+                    tr.onFinished = EventHandler {
+                        currentShape.updatePoint()
+                        currentShape.steps++
+                        play()
+                    }
                 }
             }
-            (event.code == KeyCode.DOWN) -> {
+            (event.code == KeyCode.SPACE) -> {
                 currentShape.speed = 10.0
             }
-            (event.code == KeyCode.LEFT && canFit(currentShape.shapeLeft())) -> {
-                lock = true
-                trDown.stop()
+            (event.code == KeyCode.LEFT && canFit(currentShape.boundsLeft())) -> {
+                tr.stop()
                 currentShape.updatePoint()
-                val pt = currentShape.moveLeft()
-                pt.onFinished = EventHandler {
+                tr = currentShape.moveLeft()
+                tr.onFinished = EventHandler {
                     currentShape.updatePoint()
-                    play()
-                    lock = false
+                    tr = currentShape.moveDown();
+                    tr.onFinished = EventHandler {
+                        currentShape.updatePoint()
+                        currentShape.steps++
+                        play()
+                    }
                 }
             }
-            (event.code == KeyCode.RIGHT && canFit(currentShape.shapeRight())) -> {
-                lock = true
-                trDown.stop()
+            (event.code == KeyCode.RIGHT && canFit(currentShape.boundsRight())) -> {
+                tr.stop()
                 currentShape.updatePoint()
-                val pt = currentShape.moveRight()
-                pt.onFinished = EventHandler {
+                tr = currentShape.moveRight()
+                tr.onFinished = EventHandler {
                     currentShape.updatePoint()
-                    play()
-                    lock = false
+                    tr = currentShape.moveDown();
+                    tr.onFinished = EventHandler {
+                        currentShape.updatePoint()
+                        currentShape.steps++
+                        play()
+                    }
                 }
             }
         }
     }
 
-    private fun canFit(probe: TShape): Boolean {
-        return children.none { (it is TRow && !it.canFit(probe)) || (it is TContainer && !it.canFit(probe)) }
+    private fun canFit(b: List<Bounds>): Boolean {
+        return b.all { it.minY < rows[ROWS - 1].boundsInParent.maxY } &&
+                b.all { it.minX >= rows[0].boundsInParent.minX } &&
+                b.all { it.maxX <= rows[0].boundsInParent.maxX } &&
+                rows.all { it.canFit(b) }
     }
 
     private fun canFit(angle: Double): Boolean {
-        val delta = angle / 90.0
-        var count = 0.0
-        while (count != angle) {
-            if (!canFit(currentShape.deltaRotate(count))) {
+        var i = currentShape.angle;
+        while (i < currentShape.angle + angle) {
+            if (!canFit(currentShape.boundsAngle(i)))
                 return false
-            }
-            count += delta
+            i += 1.0
         }
-        return true
+
+        return true;
     }
 
     private fun fix() {
-        rows.forEach { row ->
-            row.fix(currentShape)
+        rows.forEach {
+            it.fix(currentShape.allBounds())
         }
         children.remove(currentShape)
         processFalling()
@@ -194,34 +207,31 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     fun play() {
-        trDown = currentShape.moveDown()
-        trDown.onFinished = EventHandler {
-            if (canFit(currentShape.shapeDown())) {
-                currentShape.updatePoint()
-                currentShape.setNextY()
+        if (canFit(currentShape.boundsDown())) {
+            tr = currentShape.moveDown()
+            tr.onFinished = EventHandler {
+                currentShape.centerY = currentShape.centerY + CELL_G;
+                currentShape.steps++
                 play()
-            } else {
-                fix()
+            }
+        } else {
+            println("fix")
+            fix()
+            children.remove(nextShape)
+            currentShape = feed.currentShape()
 
-                currentShape = feed.currentShape()
-                currentShape.startPoint(startPoint)
-                if (canFit(currentShape.shapeDown())) {
-                    children.remove(nextShape)
+            currentShape.startPoint(startPoint)
 
-                    play()
-
-                    children.add(currentShape)
-                    nextShape = feed.nextShape()
-                    children.add(nextShape)
-                    nextShape.translateY = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
-                    nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
-                } else {
-                    fix()
-                }
+            nextShape = feed.nextShape()
+            nextShape.translateY = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
+            nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
+            if (canFit(currentShape.boundsDown())) {
+                children.add(currentShape)
+                children.add(nextShape)
+                play()
             }
         }
     }
-
 
     private fun startPoint(basePoint: Point2D): Point2D {
         val xShift = L_WIDTH / 2 + GAP

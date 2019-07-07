@@ -37,6 +37,10 @@ class TRow(basePoint: Point2D) : Group() {
         this.centerY = (CELL_G) / 2
     }
 
+    fun setColor(color: Color) {
+        empty.forEach { it.fill = color }
+    }
+
     private fun rect(x: Double, y: Double) {
         val rect = Rectangle(CELL_SIZE, CELL_SIZE)
         rect.arcHeight = 20.0
@@ -48,9 +52,14 @@ class TRow(basePoint: Point2D) : Group() {
         empty.add(rect)
     }
 
-    fun canFit(shape: TShape): Boolean {
+    fun canFit(bounds: List<Bounds>): Boolean {
+        if (idx == 0 && fill.size > 0 && !fill.none { child ->
+                    bounds.any { child.intersects(sceneToLocal(it)) }
+                })
+            println("GOT it ")
+
         return fill.none { child ->
-            shape.children.any { child.intersects(cellBounds(it)) }
+            bounds.any { child.intersects(sceneToLocal(it)) }
         }
     }
 
@@ -58,11 +67,10 @@ class TRow(basePoint: Point2D) : Group() {
         return sceneToLocal(cell.localToScene(cell.boundsInLocal))
     }
 
-    fun fix(shape: TShape) {
-        val probe = shape.shapeForFix()
+    fun fix(bounds: List<Bounds>) {
         val toMove = ArrayList<Node>()
-        probe.children.forEach { sChild ->
-            empty.filter { it.intersects(cellBounds(sChild)) && !toMove.contains(it) }
+        bounds.forEach { b ->
+            empty.filter { it.intersects(sceneToLocal(b)) && !toMove.contains(it) }
                     .forEach {
                         toMove.add(it)
                         fill.add(it)

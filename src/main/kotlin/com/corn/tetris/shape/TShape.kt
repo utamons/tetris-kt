@@ -8,11 +8,16 @@ import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.PathTransition
 import javafx.animation.Timeline
+import javafx.geometry.Bounds
 import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.paint.Color
-import javafx.scene.shape.*
+import javafx.scene.shape.LineTo
+import javafx.scene.shape.MoveTo
+import javafx.scene.shape.Path
+import javafx.scene.shape.Rectangle
 import javafx.scene.transform.Rotate
+import javafx.scene.transform.Translate
 import javafx.util.Duration
 
 
@@ -20,27 +25,32 @@ abstract class TShape : Group() {
 
     private var centerX: Double = 0.0
     var centerY: Double = 0.0
-    private var nextY: Double = 0.0
-    private var angle: Double = 0.0
+    var angle: Double = 0.0
     var speed = 300.0
     var rotateSpeed = 100.0
+    var steps = 0;
+    var startY = 0.0
 
     fun startPoint(startPoint: Point2D) {
         layoutX = 0.0
         layoutY = 0.0
-        this.centerX = startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
-        this.centerY = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
-        nextY = centerY + CELL_G
+        this.centerX = centerX(startPoint)
+        this.centerY = centerY(startPoint)
+
+        this.translateX = centerX - hCells() * CELL_G / 2 + GAP / 2
+        this.translateY = startPoint.y - vCells() * CELL_G
+        startY = centerY
     }
 
-    fun updatePoint() {
-        centerY = (CELL_G) / 2 * vCells() + translateY
-        centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
+    private fun nextY(): Double {
+        return startY + CELL_G * steps + CELL_G
     }
 
-    fun setNextY() {
-        nextY = centerY + CELL_G
-    }
+    private fun centerY(startPoint: Point2D) = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()
+
+    private fun centerX(startPoint: Point2D) =
+            startPoint.x + (COLS / 2 - hCells() / 2) * (CELL_G) + (CELL_G) / 2 * hCells() - GAP / 2
+
 
     private val color = Color.DARKGREEN
 
@@ -54,81 +64,62 @@ abstract class TShape : Group() {
         children.add(rect)
     }
 
-    protected fun probeRect(x: Double, y: Double, shape: TShape) {
-        val rect = Rectangle(CELL_SIZE, CELL_SIZE)
-        rect.fill = Color.RED
-        rect.x = x
-        rect.y = y
-        shape.children.add(rect)
-    }
-
     abstract fun hCells(): Int
     abstract fun vCells(): Int
-    abstract fun probeTo(basepoint: Point2D): TShape
     abstract fun pivot(): Point2D
 
-    private fun shape(angle: Double, y: Double): TShape {
-        val pX = toLeftEdge()
-        val probe = probeTo(Point2D(pX, y))
-        if (angle % 360 != 0.0) {
-            val pvX = pivot().x
-            val pvY = pivot().y
-            val rotate = Rotate()
-            val circle = Circle(pvX, pvY, GAP, Color.BLACK)
-            probe.children.add(circle)
-            rotate.angle = angle
-            rotate.pivotX = pvX
-            rotate.pivotY = pvY
-            probe.transforms.add(rotate)
-        }
-        return probe;
+    fun allBounds(): List<Bounds> {
+        return children.map { it.localToScene(it.boundsInLocal) }
     }
 
-    fun deltaRotate(delta: Double): TShape {
-        return shape(this.angle + delta, translateY);
+    fun updatePoint() {
+        centerY = translateY + (CELL_G) / 2 * vCells()
+        centerX = CELL_G * hCells() / 2 + GAP / 2 + translateX - GAP
     }
 
-    fun shapeForFix(): TShape {
-        val probe = shape(angle, centerY - vCells() * CELL_G / 2+ CELL_G)
-        return probe
-    }
-
-    fun shapeDown(): TShape {
-        if (angle % 360 == 0.0) {
-            val pX = toLeftEdge()
-            return probeTo(Point2D(pX, centerY + CELL_G))
-        } else {
-            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
-            probe.translateY += (CELL_G + CELL_G / 2)
-            return probe;
+    fun boundsDown(): List<Bounds> {
+        val tr = Translate();
+        tr.y += CELL_G
+        return children.map {
+            val bounds = it.localToScene(it.boundsInLocal)
+            tr.transform(bounds)
         }
     }
 
-    fun shapeRight(): TShape {
-        if (angle % 360 == 0.0) {
-            val pX = toLeftEdge()
-            return probeTo(Point2D(pX + CELL_G, centerY))
-        } else {
-            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
-            probe.translateX += CELL_G
-            return probe;
+    fun boundsRight(): List<Bounds> {
+        val tr = Translate();
+        tr.x += CELL_G
+        return children.map {
+            val bounds = it.localToScene(it.boundsInLocal)
+            tr.transform(bounds)
         }
     }
 
-    fun shapeLeft(): TShape {
-        if (angle % 360 == 0.0) {
-            val pX = toLeftEdge()
-            return probeTo(Point2D(pX - CELL_G, centerY))
-        } else {
-            val probe = shape(angle, centerY - vCells() * CELL_G / 2)
-            probe.translateX -= CELL_G
-            return probe;
+    fun boundsLeft(): List<Bounds> {
+        val tr = Translate();
+        tr.x -= CELL_G
+        return children.map {
+            val bounds = it.localToScene(it.boundsInLocal)
+            tr.transform(bounds)
         }
     }
 
+    fun boundsAngle(angle: Double): List<Bounds> {
+        val tr = Translate();
+        tr.y += CELL_G
+        val trr = Rotate(angle, pivot().x, pivot().y)
+        return children.map {
+            var bounds = it.boundsInLocal
+            bounds = trr.transform(bounds)
+            bounds = localToScene(bounds)
+            tr.transform(bounds)
+        }
+    }
 
     fun rotate(angle: Double): Timeline {
         this.angle += angle
+        if (angle % 360 == 0.0)
+            this.angle = 0.0
         val rotationTransform = Rotate(0.0, pivot().x, pivot().y)
         this.transforms.add(rotationTransform)
         val rotationAnimation = Timeline()
@@ -149,7 +140,7 @@ abstract class TShape : Group() {
     }
 
     fun moveDown(): PathTransition {
-        return move(path(centerX, nextY), speed)
+        return move(path(centerX, nextY()), speed)
     }
 
     fun moveRight(): PathTransition {
@@ -162,7 +153,11 @@ abstract class TShape : Group() {
 
     private fun move(path: Path, duration: Double): PathTransition {
         val ptr = PathTransition()
-        ptr.duration = Duration.millis(duration)
+        var koeff = (nextY()-centerY)/ CELL_G
+        if (koeff < 0.3)
+            koeff = 0.3
+        println(koeff)
+        ptr.duration = Duration.millis(duration*koeff)
         ptr.node = this
         ptr.path = path
         ptr.cycleCount = 1
@@ -186,6 +181,4 @@ abstract class TShape : Group() {
 
         return path
     }
-
-    private fun toLeftEdge() = centerX - CELL_G * hCells() / 2 + GAP / 2
 }
