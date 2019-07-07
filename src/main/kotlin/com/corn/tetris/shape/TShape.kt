@@ -33,6 +33,9 @@ abstract class TShape : Group() {
         this.centerX = centerX(startPoint)
         this.centerY = centerY(startPoint)
         nextY = centerY + CELL_G
+
+        this.translateX = centerX - hCells() * CELL_G / 2 + GAP /2
+        this.translateY = startPoint.y - vCells() * CELL_G
     }
 
     private fun centerY(startPoint: Point2D) = startPoint.y + (CELL_G) / 2 * vCells() - CELL_G * vCells()

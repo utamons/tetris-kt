@@ -8,6 +8,7 @@ import javafx.geometry.Point2D
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import javafx.scene.paint.Color
 
 
 const val CELL_SIZE = 45.0
@@ -113,8 +114,11 @@ class Tetris(basePoint: Point2D) : Group() {
             nextShape = feed.nextShape()
             nextShape.translateY = startPoint.y + (CELL_G) / 2 * currentShape.vCells()
             nextShape.translateX = startPoint.x + COLS * CELL_G + L_WIDTH * 2 + 50
-            children.add(currentShape)
-            children.add(nextShape)
+            if (canFit()) {
+                children.add(currentShape)
+                children.add(nextShape)
+                play()
+            }
         }
     }
 
