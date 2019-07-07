@@ -61,11 +61,6 @@ class Tetris(basePoint: Point2D) : Group() {
     }
 
     private fun processKey(event: KeyEvent) {
-        if (lock) {
-            println("Locked")
-            return
-        }
-
         when {
             (event.code == KeyCode.P) -> {
                 if (pause)
@@ -163,7 +158,6 @@ class Tetris(basePoint: Point2D) : Group() {
     private fun fall(i: Int) {
         if (i == gaps.size) {
             gaps.clear()
-            println("Felt")
         } else {
             fall(gaps[i]) {
                 children.removeAll(gaps[i].rows)
@@ -215,7 +209,6 @@ class Tetris(basePoint: Point2D) : Group() {
                 play()
             }
         } else {
-            println("fix")
             fix()
             children.remove(nextShape)
             currentShape = feed.currentShape()

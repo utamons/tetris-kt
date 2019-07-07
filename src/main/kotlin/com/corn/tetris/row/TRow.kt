@@ -53,11 +53,6 @@ class TRow(basePoint: Point2D) : Group() {
     }
 
     fun canFit(bounds: List<Bounds>): Boolean {
-        if (idx == 0 && fill.size > 0 && !fill.none { child ->
-                    bounds.any { child.intersects(sceneToLocal(it)) }
-                })
-            println("GOT it ")
-
         return fill.none { child ->
             bounds.any { child.intersects(sceneToLocal(it)) }
         }

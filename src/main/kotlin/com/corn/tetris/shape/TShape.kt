@@ -153,11 +153,10 @@ abstract class TShape : Group() {
 
     private fun move(path: Path, duration: Double): PathTransition {
         val ptr = PathTransition()
-        var koeff = (nextY()-centerY)/ CELL_G
+        var koeff = (nextY() - centerY) / CELL_G
         if (koeff < 0.3)
             koeff = 0.3
-        println(koeff)
-        ptr.duration = Duration.millis(duration*koeff)
+        ptr.duration = Duration.millis(duration * koeff)
         ptr.node = this
         ptr.path = path
         ptr.cycleCount = 1
