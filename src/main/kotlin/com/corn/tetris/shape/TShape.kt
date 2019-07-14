@@ -26,8 +26,8 @@ abstract class TShape : Group() {
     private var centerX: Double = 0.0
     var centerY: Double = 0.0
     var angle: Double = 0.0
-    var speed = 300.0
-    var rotateSpeed = 100.0
+    var downSpeed = 300.0
+    var moveSpeed = 300.0
     var steps = 0;
     var startY = 0.0
 
@@ -126,7 +126,7 @@ abstract class TShape : Group() {
         rotationAnimation.keyFrames
                 .add(
                         KeyFrame(
-                                Duration.millis(rotateSpeed),
+                                Duration.millis(moveSpeed),
                                 KeyValue(
                                         rotationTransform.angleProperty(),
                                         angle
@@ -140,15 +140,15 @@ abstract class TShape : Group() {
     }
 
     fun moveDown(): PathTransition {
-        return move(path(centerX, nextY()), speed)
+        return move(path(centerX, nextY()), downSpeed)
     }
 
     fun moveRight(): PathTransition {
-        return move(path(centerX + CELL_G, centerY), 100.0)
+        return move(path(centerX + CELL_G, centerY), moveSpeed)
     }
 
     fun moveLeft(): PathTransition {
-        return move(path(centerX - CELL_G, centerY), 100.0)
+        return move(path(centerX - CELL_G, centerY), moveSpeed)
     }
 
     private fun move(path: Path, duration: Double): PathTransition {

@@ -84,7 +84,7 @@ class Tetris(basePoint: Point2D) : Group() {
                 }
             }
             (event.code == KeyCode.SPACE) -> {
-                currentShape.speed = 10.0
+                currentShape.downSpeed = 10.0
             }
             (event.code == KeyCode.LEFT && canFit(currentShape.boundsLeft())) -> {
                 tr.stop()
